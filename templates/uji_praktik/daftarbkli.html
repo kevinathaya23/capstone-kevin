@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar KBLI - FRI Finance</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles agar identik dengan Katalog Halal */
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Card Style yang diperhalus */
+        .kbli-card {
+            background: white;
+            border-radius: 1.5rem; /* rounded-3xl */
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .kbli-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border-color: #6d28d9; /* purple-700 */
+        }
+
+        /* Badge kategori custom */
+        .badge-category {
+            background-color: #f3f4f6;
+            color: #4b5563;
+            font-size: 11px;
+            padding: 2px 10px;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100 min-h-screen">
+
+    {% include 'headerlog.html' %}
+
+    <div class="container mx-auto px-6 py-16 md:py-24">
+        <div class="max-w-7xl mx-auto">
+
+            <div class="mb-10">
+                <button onClick="window.history.back()" class="flex items-center gap-2 text-purple-600 font-bold text-sm uppercase tracking-wider hover:text-purple-800 transition-all mb-6">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Kembali ke Dashboard
+                </button>
+                <h1 class="text-gray-900 text-4xl md:text-5xl font-bold mb-4">Daftar KBLI</h1>
+                <p class="text-gray-600 text-lg leading-relaxed max-w-3xl">
+                    Referensi Klasifikasi Baku Lapangan Usaha Indonesia untuk mempermudah proses pendaftaran NIB (Nomor Induk Berusaha).
+                </p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl p-6 md:p-10 mb-8">
+                <div class="flex flex-col md:flex-row gap-6 mb-10">
+                    <div class="flex-1 relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </span>
+                        <input id="search" type="text" 
+                            placeholder="Cari kode KBLI atau nama usaha..." 
+                            class="w-full pl-12 pr-4 py-4 border-2 border-gray-100 rounded-2xl focus:outline-none focus:border-purple-600 focus:ring-4 focus:ring-purple-100 transition-all text-gray-700" 
+                            oninput="filterKBLI()">
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <button onclick="setActiveFilter(this, 'semua')" class="filter-btn active px-6 py-3 rounded-xl font-semibold transition-all bg-purple-700 text-white shadow-lg">Semua</button>
+                        <button onclick="setActiveFilter(this, 'Industri Makanan')" class="filter-btn px-6 py-3 rounded-xl font-semibold transition-all bg-gray-100 text-gray-600 hover:bg-green-600 hover:text-white">Makanan</button>
+                        <button onclick="setActiveFilter(this, 'Industri Minuman')" class="filter-btn px-6 py-3 rounded-xl font-semibold transition-all bg-gray-100 text-gray-600 hover:bg-red-600 hover:text-white">Minuman</button>
+                        <button onclick="setActiveFilter(this, 'Perdagangan')" class="filter-btn px-6 py-3 rounded-xl font-semibold transition-all bg-gray-100 text-gray-600 hover:bg-yellow-600 hover:text-white">Perdagangan</button>
+                    </div>
+                </div>
+
+                <div id="kbli-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+
+                <div id="no-results" class="text-center py-20 hidden">
+                    <img src="https://illustrations.popsy.co/gray/searching.svg" class="w-40 mx-auto mb-4" alt="not found">
+                    <p class="text-gray-500 text-lg">Tidak ada kode KBLI yang cocok dengan pencarian Anda.</p>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-r-xl shadow-sm">
+                <h3 class="text-yellow-700 font-bold mb-3 text-lg flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    Informasi Penting:
+                </h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3 text-yellow-800 text-base">
+                        <span class="mt-2 w-1.5 h-1.5 rounded-full bg-yellow-500 flex-shrink-0"></span>
+                        <span>Kode KBLI diperlukan saat mendaftar NIB di sistem OSS</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-yellow-800 text-base">
+                        <span class="mt-2 w-1.5 h-1.5 rounded-full bg-yellow-500 flex-shrink-0"></span>
+                        <span>Pilih kode KBLI yang paling sesuai dengan bidang usaha Anda</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-yellow-800 text-base">
+                        <span class="mt-2 w-1.5 h-1.5 rounded-full bg-yellow-500 flex-shrink-0"></span>
+                        <span>Satu usaha dapat memiliki lebih dari satu kode KBLI jika memiliki kegiatan usaha yang beragam</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-yellow-800 text-base">
+                        <span class="mt-2 w-1.5 h-1.5 rounded-full bg-yellow-500 flex-shrink-0"></span>
+                        <span>Untuk informasi lengkap, kunjungi website resmi OSS: <strong class="text-yellow-900 font-bold underline">oss.go.id</strong></span>
+                    </li>
+                </ul>
+            </div>            
+        </div>
+    </div>
+
+    <script>
+        const dataKBLI = [
+            { kode: '10611', nama: 'Penggilingan Padi-Padian', kategori: 'Industri Makanan', deskripsi: 'Kegiatan penggilingan beras, gandum, jagung dan produk hasil padi-padian.' },
+            { kode: '10711', nama: 'Industri Roti dan Kue', kategori: 'Industri Makanan', deskripsi: 'Pembuatan berbagai jenis roti, kue kering, kue basah dan produk bakery lainnya.' },
+            { kode: '10721', nama: 'Industri Gula', kategori: 'Industri Makanan', deskripsi: 'Pembuatan gula pasir, gula merah dan produk gula turunannya.' },
+            { kode: '10731', nama: 'Industri Cokelat & Permen', kategori: 'Industri Makanan', deskripsi: 'Pembuatan produk kakao, cokelat batangan, permen dan kembang gula.' },
+            { kode: '10741', nama: 'Industri Mi dan Pasta', kategori: 'Industri Makanan', deskripsi: 'Pembuatan mi instan, mi kering, bihun dan produk pasta sejenis.' },
+            { kode: '10791', nama: 'Industri Bumbu & Penyedap', kategori: 'Industri Makanan', deskripsi: 'Pembuatan bumbu masak, kecap, sambal, saus dan penyedap rasa.' },
+            { kode: '11011', nama: 'Industri Minuman Ringan', kategori: 'Industri Minuman', deskripsi: 'Pembuatan minuman ringan, air mineral kemasan dan minuman berenergi.' },
+            { kode: '46391', nama: 'Perdagangan Besar Makanan', kategori: 'Perdagangan', deskripsi: 'Distribusi skala besar berbagai produk makanan dan bahan baku pangan.' },
+            { kode: '47211', nama: 'Eceran Beras & Makanan', kategori: 'Perdagangan', deskripsi: 'Toko atau outlet eceran beras dan bahan makanan pokok masyarakat.' },
+            { kode: '56101', nama: 'Restoran', kategori: 'Jasa Makanan', deskripsi: 'Penyediaan makanan dan minuman untuk konsumsi di tempat (dine-in).' },
+            { kode: '56211', nama: 'Katering Acara', kategori: 'Jasa Makanan', deskripsi: 'Penyediaan jasa boga katering untuk acara pernikahan, kantor, atau pesta.' }
+        ];
+
+        let currentCategory = 'semua';
+
+        function displayKBLI(items) {
+            const list = document.getElementById('kbli-list');
+            const noResults = document.getElementById('no-results');
+            list.innerHTML = '';
+
+            if (items.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            }
+            noResults.classList.add('hidden');
+
+            items.forEach(item => {
+                const card = `
+                    <div class="kbli-card p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="bg-purple-100 text-purple-700 font-bold px-3 py-1 rounded-lg text-sm">
+                                    #${item.kode}
+                                </div>
+                                <span class="badge-category">${item.kategori}</span>
+                            </div>
+                            <h3 class="text-gray-900 font-bold text-lg mb-2 leading-tight">${item.nama}</h3>
+                            <p class="text-gray-500 text-sm leading-relaxed">${item.deskripsi}</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-gray-50">
+                            <a href="https://oss.go.id" target="_blank" class="text-purple-600 text-xs font-bold uppercase tracking-wider hover:text-purple-800 flex items-center gap-1">
+                                Lihat Detail KBLI 
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                list.innerHTML += card;
+            });
+        }
+
+        function filterKBLI() {
+            const search = document.getElementById('search').value.toLowerCase();
+            const filtered = dataKBLI.filter(item => {
+                const matchSearch = item.nama.toLowerCase().includes(search) || item.kode.includes(search);
+                const matchCat = currentCategory === 'semua' || item.kategori === currentCategory;
+                return matchSearch && matchCat;
+            });
+            displayKBLI(filtered);
+        }
+
+        function setActiveFilter(btn, kategori) {
+            // Reset all buttons
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('bg-purple-700', 'text-white', 'shadow-lg');
+                b.classList.add('bg-gray-100', 'text-gray-600');
+            });
+
+            // Set active button
+            btn.classList.remove('bg-gray-100', 'text-gray-600');
+            btn.classList.add('bg-purple-700', 'text-white', 'shadow-lg');
+
+            currentCategory = kategori;
+            filterKBLI();
+        }
+
+        // Init
+        displayKBLI(dataKBLI);
+    </script>
+</body>
+
+</html>

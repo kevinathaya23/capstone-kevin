@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun - LP3H Telkom University</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100 min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    {% include 'web_awal/header.html' %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mx-auto px-8 pt-6">
+                <div class="max-w-4xl mx-auto space-y-3">
+                    {% for category, message in messages %}
+                        <div class="p-4 text-white rounded-lg
+                            {% if category == 'success' %}
+                                bg-green-500
+                            {% elif category == 'danger' or category == 'error' %}
+                                bg-red-500
+                            {% else %}
+                                bg-yellow-500
+                            {% endif %}
+                        ">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Daftar Form -->
+    <main class="flex-grow">
+        <div class="container mx-auto px-8 py-16">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-center text-gray-900 text-4xl font-bold mb-6">Pendaftaran Akun</h1>
+                <p class="text-center text-gray-600 mb-8 max-w-lg mx-auto text-sm">
+                    Silakan pilih peran pendaftaran Anda sebagai Pendamping P3H atau Pelaku Usaha untuk memulai pendampingan halal self-declare.
+                </p>
+                
+                <form action="/daftar" method="POST" class="bg-white rounded-xl shadow-lg p-8 sm:p-10">
+                    
+                    <!-- Pilihan Role -->
+                    <div class="mb-8 p-5 bg-purple-50 rounded-xl border border-purple-200">
+                        <label class="block text-sm font-bold text-gray-800 mb-3">Daftar Sebagai:</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <label class="flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-purple-300 cursor-pointer hover:border-purple-600 transition-colors">
+                                <input type="radio" name="role" value="pendamping" checked onchange="toggleRoleFields('pendamping')" class="text-purple-600 focus:ring-purple-500 h-4 w-4">
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm">Pendamping P3H</div>
+                                    <div class="text-xs text-gray-500">Mendampingi proses produk halal pelaku usaha</div>
+                                </div>
+                            </label>
+
+                            <label class="flex items-center gap-3 p-4 bg-white rounded-lg border-2 border-purple-300 cursor-pointer hover:border-purple-600 transition-colors">
+                                <input type="radio" name="role" value="pelaku_usaha" onchange="toggleRoleFields('pelaku_usaha')" class="text-purple-600 focus:ring-purple-500 h-4 w-4">
+                                <div>
+                                    <div class="font-bold text-gray-900 text-sm">Pelaku Usaha (UMKM)</div>
+                                    <div class="text-xs text-gray-500">Mengajukan & memantau sertifikasi halal usaha</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- DATA UTAMA (COMMON) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                        <!-- Nama Lengkap -->
+                        <div>
+                            <label for="name" class="block text-sm text-gray-600 mb-1">Nama Lengkap</label>
+                            <input type="text" id="name" name="name" placeholder="Nama Lengkap & Gelar (jika ada)" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm" required>
+                        </div>
+
+                        <!-- Nomor Telepon / WA -->
+                        <div>
+                            <label for="no_telp" class="block text-sm text-gray-600 mb-1">Nomor Telepon / WhatsApp</label>
+                            <input type="text" id="no_telp" name="no_telp" placeholder="08xxxxxxxxxx" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm" required>
+                        </div>
+                    </div>
+
+                    <!-- SPESIFIK PENDAMPING -->
+                    <div id="pendampingFields" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                        <!-- Wilayah Kerja -->
+                        <div>
+                            <label for="wilayah" class="block text-sm text-gray-600 mb-1">Wilayah Kerja / Domisili</label>
+                            <select id="wilayah" name="wilayah" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm bg-white">
+                                <option value="Bandung">Bandung</option>
+                                <option value="Cimahi">Cimahi</option>
+                                <option value="Sumedang">Sumedang</option>
+                                <option value="Garut">Garut</option>
+                                <option value="Tasikmalaya">Tasikmalaya</option>
+                                <option value="Cianjur">Cianjur</option>
+                                <option value="Bekasi">Bekasi</option>
+                                <option value="Depok">Depok</option>
+                            </select>
+                        </div>
+
+                        <!-- No Registrasi P3H -->
+                        <div>
+                            <label for="no_registrasi" class="block text-sm text-gray-600 mb-1">No. Registrasi P3H (Opsional)</label>
+                            <input type="text" id="no_registrasi" name="no_registrasi" placeholder="Contoh: P3H-2024-003" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm">
+                        </div>
+                    </div>
+
+                    <!-- SPESIFIK PELAKU USAHA (HIDDEN BY DEFAULT) -->
+                    <div id="pelakuFields" class="hidden mb-6 space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Nama Usaha -->
+                            <div>
+                                <label for="nama_usaha" class="block text-sm text-gray-600 mb-1">Nama Usaha / Merek</label>
+                                <input type="text" id="nama_usaha" name="nama_usaha" placeholder="Contoh: Keripik Pisang Berkah" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm">
+                            </div>
+
+                            <!-- NIB -->
+                            <div>
+                                <label for="nib" class="block text-sm text-gray-600 mb-1">Nomor Induk Berusaha (NIB 13 digit)</label>
+                                <input type="text" id="nib" name="nib" placeholder="Contoh: 8120400000006" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Jenis Produk -->
+                            <div>
+                                <label for="jenis_produk" class="block text-sm text-gray-600 mb-1">Jenis Produk</label>
+                                <select id="jenis_produk" name="jenis_produk" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm bg-white">
+                                    <option value="Makanan ringan">Makanan ringan</option>
+                                    <option value="Minuman herbal">Minuman herbal / Olahan kopi</option>
+                                    <option value="Olahan daging">Olahan daging & unggas</option>
+                                    <option value="Bumbu masak">Bumbu masak & rempah</option>
+                                    <option value="Kue & bakeri">Kue tradisional & bakeri</option>
+                                    <option value="Katering">Katering / Siap saji</option>
+                                </select>
+                            </div>
+
+                            <!-- Alamat Usaha -->
+                            <div>
+                                <label for="alamat" class="block text-sm text-gray-600 mb-1">Alamat Tempat Usaha</label>
+                                <input type="text" id="alamat" name="alamat" placeholder="Jalan, No, Kelurahan, Kota" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KREDENSIAL AKUN -->
+                    <div class="mb-6">
+                        <label for="email" class="block text-sm text-gray-600 mb-1">Email Pengguna (Untuk Login)</label>
+                        <input type="email" id="email" name="email" placeholder="example@mail.com" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm" required>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <label for="password" class="block text-sm text-gray-600 mb-1">Kata Sandi</label>
+                            <input type="password" id="password" name="password" placeholder="••••••••" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm" required minlength="6">
+                        </div>
+
+                        <div>
+                            <label for="confirm_password" class="block text-sm text-gray-600 mb-1">Konfirmasi Kata Sandi</label>
+                            <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent text-sm" required minlength="6">
+                        </div>
+                    </div>
+
+                    <!-- Tombol Submit -->
+                    <div class="mb-6">
+                        <button type="submit" class="w-full px-6 py-3 bg-purple-700 text-white rounded-full hover:bg-purple-800 transition-all font-medium shadow-md">
+                            Daftar Akun Sekarang
+                        </button>
+                    </div>
+
+                    <p class="text-center text-sm text-gray-600">
+                        Sudah punya akun? <a href="/login" class="text-purple-600 hover:text-purple-700 font-semibold">Login di sini</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    {% include 'web_awal/footer.html' %}
+
+    <script>
+        function toggleRoleFields(role) {
+            const pendampingFields = document.getElementById('pendampingFields');
+            const pelakuFields = document.getElementById('pelakuFields');
+            if (role === 'pendamping') {
+                pendampingFields.classList.remove('hidden');
+                pelakuFields.classList.add('hidden');
+            } else {
+                pendampingFields.classList.add('hidden');
+                pelakuFields.classList.remove('hidden');
+            }
+        }
+    </script>
+
+</body>
+</html>

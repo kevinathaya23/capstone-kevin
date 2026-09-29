@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% block title %}{{ p.nama }} – Detail Pendamping{% endblock %}
+{% block page_title %}Detail Pendamping{% endblock %}
+{% block breadcrumb %}LP3H &rsaquo; <a href="{{ url_for('daftar_pendamping') }}">Pendamping</a> &rsaquo; {{ p.nama }}{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<div class="detail-hero fade-in-up">
+  <div class="avatar avatar-xl" style="background:var(--gold);color:var(--dark);flex-shrink:0;">{{ p.avatar }}</div>
+  <div class="info" style="flex:1;">
+    <h2>{{ p.nama }}</h2>
+    <p>{{ p.no_registrasi }} &nbsp;·&nbsp; {{ p.email }}</p>
+    <div class="meta-chips">
+      <span class="meta-chip">📍 {{ p.wilayah }}</span>
+      <span class="meta-chip">📞 {{ p.kontak }}</span>
+      <span class="meta-chip">📋 SK: {{ p.no_sk }}</span>
+      <span class="meta-chip" style="background:rgba({{ '201,162,39' if sk_cls=='success' else '220,38,38' if sk_cls=='danger' else '217,119,6' }}, .2);">
+        🗓️ SK s/d {{ p.sk_berlaku_sampai|formatdate }} – <strong>{{ sk_status }}</strong>
+      </span>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+    <span class="badge {{ 'badge-success' if p.status == 'Aktif' else 'badge-secondary' }}" style="font-size:13px;padding:6px 16px;">
+      {{ p.status }}
+    </span>
+    {% if current_user.role == 'admin' %}
+    <button class="btn btn-gold btn-sm" onclick="alert('Edit: hubungkan ke backend.')">✏️ Edit Data</button>
+    {% endif %}
+  </div>
+</div>
+
+<div class="grid-12 fade-in-up">
+  <!-- KIRI: Profil + Kompetensi -->
+  <div style="display:flex;flex-direction:column;gap:22px;">
+
+    <!-- Profil Umum -->
+    <div class="card">
+      <div class="card-header"><h3>👤 Profil Pendamping</h3></div>
+      <div class="card-body">
+        <table style="width:100%;border-collapse:collapse;font-size:13.5px;">
+          {% set rows = [
+            ('NIK', p.nik),
+            ('No. Registrasi P3H', p.no_registrasi),
+            ('No. SK Penugasan', p.no_sk),
+            ('Wilayah Tugas', p.wilayah),
+            ('Email', p.email),
+            ('No. HP', p.kontak),
+          ] %}
+          {% for label, val in rows %}
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 0;color:var(--text-muted);width:50%;font-weight:500;">{{ label }}</td>
+            <td style="padding:10px 0;font-weight:600;">{{ val }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+
+    <!-- Kompetensi -->
+    <div class="card">
+      <div class="card-header">
+        <h3>🎓 Data Kompetensi</h3>
+        <span class="badge badge-{{ komp_cls }}">{{ komp_status }}</span>
+      </div>
+      <div class="card-body">
+        {% if komp_cls == 'danger' %}
+        <div class="alert alert-danger" style="margin-bottom:16px;">⚠️ Sertifikat kompetensi sudah kedaluwarsa! Harap segera perpanjang.</div>
+        {% elif komp_cls == 'warning' %}
+        <div class="alert alert-warning" style="margin-bottom:16px;">⚠️ Sertifikat kompetensi akan segera habis masa berlakunya.</div>
+        {% endif %}
+
+        <table style="width:100%;border-collapse:collapse;font-size:13.5px;">
+          {% set rows_k = [
+            ('No. Sertifikat', p.no_sertifikat_kompetensi),
+            ('Penyelenggara', p.penyelenggara_kompetensi),
+            ('Tanggal Terbit', p.tgl_terbit_kompetensi|formatdate),
+            ('Berlaku Sampai', p.berlaku_kompetensi_sampai|formatdate),
+          ] %}
+          {% for label, val in rows_k %}
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 0;color:var(--text-muted);width:50%;font-weight:500;">{{ label }}</td>
+            <td style="padding:10px 0;font-weight:600;">{{ val }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+
+        <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+          <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Upload Sertifikat</div>
+          {% if current_user.role == 'admin' %}
+          <input type="file" class="form-control" style="margin-bottom:8px;" accept=".pdf,.jpg,.png">
+          <button class="btn btn-sm btn-outline">⬆ Upload File</button>
+          {% else %}
+          <p style="font-size:13px;color:var(--text-muted);">File sertifikat belum diupload.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI Capaian -->
+    <div class="card">
+      <div class="card-header"><h3>🎯 Capaian Target</h3></div>
+      <div class="card-body">
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:48px;font-weight:800;color:var(--{{ kpi_color }});">{{ persen }}%</div>
+          <div style="color:var(--text-muted);font-size:13px;">Capaian Target Tahunan</div>
+        </div>
+        <div class="progress-bar-wrap" style="height:12px;margin-bottom:16px;">
+          <div class="progress-bar-fill {{ kpi_color }}" style="width:{{ persen }}%;"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center;">
+          <div style="background:var(--bg);border-radius:8px;padding:10px;">
+            <div style="font-size:20px;font-weight:800;color:var(--primary);">{{ p.total_binaan }}</div>
+            <div style="font-size:11px;color:var(--text-muted);">Total Binaan</div>
+          </div>
+          <div style="background:var(--bg);border-radius:8px;padding:10px;">
+            <div style="font-size:20px;font-weight:800;color:var(--success);">{{ p.sertifikat_terbit }}</div>
+            <div style="font-size:11px;color:var(--text-muted);">Sertifikat Terbit</div>
+          </div>
+          <div style="background:var(--bg);border-radius:8px;padding:10px;">
+            <div style="font-size:20px;font-weight:800;color:var(--text-muted);">{{ p.target_bulanan * 12 }}</div>
+            <div style="font-size:11px;color:var(--text-muted);">Target/Tahun</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KANAN: Daftar Binaan + Chart -->
+  <div style="display:flex;flex-direction:column;gap:22px;">
+
+    <!-- Chart distribusi status binaan -->
+    <div class="card">
+      <div class="card-header"><h3>📊 Distribusi Status Binaan</h3></div>
+      <div class="card-body">
+        <div class="chart-container" style="height:200px;">
+          <canvas id="statusDistChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daftar Pelaku Usaha Binaan -->
+    <div class="card">
+      <div class="card-header">
+        <h3>🏪 Daftar Pelaku Usaha Binaan</h3>
+        <span class="badge badge-primary">{{ binaan|length }} usaha</span>
+      </div>
+      <!-- Filter -->
+      <div style="padding:12px 22px;border-bottom:1px solid var(--border);">
+        <div class="search-box" style="max-width:100%;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" id="searchBinaan" placeholder="Cari nama usaha..." oninput="filterBinaan()">
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="lp3h-table" id="binaanTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nama Usaha</th>
+              <th>Pemilik</th>
+              <th>Produk</th>
+              <th>Status</th>
+              <th>Update</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% set colors = {'Sertifikat Terbit':'success','Proses Pendampingan':'info','Verifikasi & Validasi':'primary','Menunggu Sidang Fatwa':'warning','Perbaikan':'warning','Ditolak':'danger','Belum Diajukan':'secondary'} %}
+            {% for b in binaan %}
+            <tr data-name="{{ b.nama_usaha|lower }}">
+              <td style="color:var(--text-muted);font-size:12px;">{{ loop.index }}</td>
+              <td>
+                <div style="font-weight:600;font-size:13.5px;">{{ b.nama_usaha }}</div>
+                <div style="font-size:11.5px;color:var(--text-muted);">NIB: {{ b.nib }}</div>
+              </td>
+              <td style="font-size:13px;">{{ b.nama_pemilik }}</td>
+              <td style="font-size:12.5px;color:var(--text-muted);">{{ b.jenis_produk }}</td>
+              <td><span class="badge badge-{{ colors.get(b.status,'secondary') }}">{{ b.status }}</span></td>
+              <td style="font-size:12px;color:var(--text-muted);">{{ b.terakhir_update|formatdate }}</td>
+              <td><a href="{{ url_for('detail_pelaku_usaha', pid=b.id) }}" class="btn btn-xs btn-outline">→</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted);">Belum ada pelaku usaha yang ditugaskan.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const statusDist = {{ status_dist|safe }};
+const ctx = document.getElementById('statusDistChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: Object.keys(statusDist),
+    datasets: [{
+      data: Object.values(statusDist),
+      backgroundColor: ['#16a34a','#0891b2','#1a6b3c','#d97706','#f59e0b','#dc2626','#64748b'],
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { size: 10 } }, beginAtZero: true, precision: 0 }
+    }
+  }
+});
+
+function filterBinaan() {
+  const q = document.getElementById('searchBinaan').value.toLowerCase();
+  document.querySelectorAll('#binaanTable tbody tr').forEach(row => {
+    row.style.display = !q || row.dataset.name.includes(q) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

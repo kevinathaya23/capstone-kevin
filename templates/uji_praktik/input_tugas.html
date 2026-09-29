@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Form Tugas Praktik</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    /* Custom styles for labels */
+    .step-card {
+      background: white;
+      border-radius: 1.5rem;
+      transition: all 0.3s ease;
+      border: 1px solid #e5e7eb;
+    }
+
+    .step-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      border-color: #6d28d9;
+    }
+
+    .step-number {
+      background-color: #f3f4f6;
+      color: #4b5563;
+      transition: all 0.3s ease;
+    }
+
+    .step-card:hover .step-number {
+      background-color: #ede9fe;
+      color: #6d28d9;
+    }
+
+    /* Styling untuk kotak "Apa itu NIB?" sesuai gambar */
+    .info-nib {
+      background-color: #f5f3ff; /* ungu sangat terang */
+      border: 1.5px solid #d8b4fe; /* border ungu */
+      border-radius: 1rem;
+      padding: 1.5rem 2rem;
+      max-width: 600px;
+      margin: 2rem auto 3rem;
+      color: #5b21b6;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      box-shadow: 0 2px 10px rgb(145 93 255 / 0.07);
+    }
+
+    .info-nib h2 {
+      font-weight: 600;
+      font-size: 1.125rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      color: #6b21a8;
+    }
+
+    .info-nib svg {
+      width: 24px;
+      height: 24px;
+      stroke: #7c3aed;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .info-nib ul {
+      list-style-type: disc;
+      padding-left: 1.25rem;
+      margin-top: 0.5rem;
+      color: #701a75;
+      font-weight: 500;
+    }
+
+    .info-nib ul li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100 min-h-screen">
+
+  {% include 'headerlog.html' %}
+
+  <div class="container mx-auto px-6 py-16 md:py-24 max-w-4xl">
+    <div class="mb-12">
+      <button onclick="window.history.back()" class="flex items-center gap-2 text-purple-600 font-bold text-sm uppercase tracking-wider hover:text-purple-800 transition-all mb-6">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Kembali ke Dashboard
+      </button>
+      <h1 class="text-gray-900 text-4xl md:text-5xl font-bold mb-4">Form Tugas Praktik</h1>
+      <p class="text-gray-600 text-lg leading-relaxed max-w-3xl">
+        Upload hasil tugas praktik Anda untuk diverifikasi oleh admin.
+      </p>
+    </div>
+
+    <!-- Kotak Info "Apa itu NIB?" sesuai desain -->
+    <section class="info-nib mx-auto">
+      <h2>
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 8v4"></path>
+          <circle cx="12" cy="16" r="1"></circle>
+        </svg>
+        Apa itu NIB?
+      </h2>
+      <p>
+        NIB (Nomor Induk Berusaha) adalah identitas pelaku usaha yang diterbitkan oleh Lembaga OSS setelah pelaku usaha melakukan pendaftaran. NIB berlaku sebagai:
+      </p>
+      <ul>
+        <li>Tanda Daftar Perusahaan (TDP)</li>
+        <li>Angka Pengenal Importir (API)</li>
+        <li>Hak Akses Kepabeanan</li>
+      </ul>
+    </section>
+
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+      <!-- Form Start here -->
+      <form action="/input-tugas" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <!-- Data Pendamping -->
+        <div class="pb-6 border-b-2 border-gray-200">
+          <h3 class="text-[#02033b] mb-4">Data Pendamping</h3>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-gray-900 mb-2">Nama Lengkap Pendamping</label>
+              <input type="text" name="namaPendamping" placeholder="Masukkan nama lengkap" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" required />
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-gray-900 mb-2">Email</label>
+                <input type="email" name="emailPendamping" placeholder="email@example.com" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" required />
+              </div>
+              <div>
+                <label class="block text-gray-900 mb-2">Nomor HP</label>
+                <input type="tel" name="nomorHP" placeholder="081234567890" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" required />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Perusahaan -->
+        <div class="pb-6 border-b-2 border-gray-200">
+          <h3 class="text-[#02033b] mb-4">Data Perusahaan/Usaha</h3>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-gray-900 mb-2">Nama Perusahaan/Usaha</label>
+              <input type="text" name="namaPerusahaan" placeholder="Nama perusahaan yang didampingi" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" required />
+            </div>
+
+            <div>
+              <label class="block text-gray-900 mb-2">Bidang Usaha</label>
+              <input type="text" name="bidangUsaha" placeholder="Contoh: Industri Makanan dan Minuman" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" required />
+            </div>
+          </div>
+        </div>
+
+        <!-- Jenis Tugas -->
+        <div class="pb-6 border-b-2 border-gray-200">
+          <h3 class="text-[#02033b] mb-4">Detail Tugas Praktik</h3>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-gray-900 mb-2">Jenis Tugas</label>
+              <select name="jenisTugas" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors bg-white" required>
+                <option value="">Pilih Jenis Tugas</option>
+                <option value="pembuatan-nib">Pembuatan NIB di OSS</option>
+                <option value="pendaftaran-sihalal">Pendaftaran SiHalal</option>
+                <option value="penyusunan-sjph">Penyusunan Dokumen SJPH</option>
+                <option value="katalog-bahan">Verifikasi Katalog Bahan Halal</option>
+                <option value="lengkap">Tugas Lengkap (Semua)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-gray-900 mb-2">Deskripsi Pengerjaan Tugas</label>
+              <textarea name="deskripsiTugas" placeholder="Jelaskan langkah-langkah yang telah dilakukan dalam mengerjakan tugas praktik..." class="w-full px-6 py-3 border-2 border-gray-300 rounded-3xl focus:outline-none focus:border-purple-700 transition-colors resize-none" rows="5" required></textarea>
+            </div>
+
+            <div>
+              <label class="block text-gray-900 mb-2">Kendala yang Dihadapi (Opsional)</label>
+              <textarea name="kendala" placeholder="Tuliskan kendala atau kesulitan yang dihadapi saat mengerjakan tugas..." class="w-full px-6 py-3 border-2 border-gray-300 rounded-3xl focus:outline-none focus:border-purple-700 transition-colors resize-none" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upload Dokumen -->
+        <div class="pb-6 border-b-2 border-gray-200">
+          <h3 class="text-[#02033b] mb-4">Upload Dokumen Pendukung</h3>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-gray-900 mb-2">Dokumen NIB (PDF)</label>
+              <input type="file" name="dokumenNIB" accept=".pdf" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" required />
+            </div>
+
+            <div>
+              <label class="block text-gray-900 mb-2">Dokumen SJPH (PDF)</label>
+              <input type="file" name="dokumenSJPH" accept=".pdf" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" required />
+            </div>
+
+            <div>
+              <label class="block text-gray-900 mb-2">Screenshot Proses OSS (JPG/PNG)</label>
+              <input type="file" name="screenshotOSS" accept=".jpg,.jpeg,.png" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" required />
+            </div>
+
+            <div>
+              <label class="block text-gray-900 mb-2">Screenshot SiHalal (JPG/PNG)</label>
+              <input type="file" name="screenshotSiHalal" accept=".jpg,.jpeg,.png" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" required />
+            </div>
+
+            <div>
+              <label class="block text-gray-900 mb-2">Laporan Tugas Lengkap (PDF) - Wajib</label>
+              <input type="file" name="laporanTugas" accept=".pdf" class="w-full px-6 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" required />
+            </div>
+          </div>
+        </div>
+
+        <!-- Catatan Tambahan -->
+        <div>
+          <label class="block text-gray-900 mb-2">Catatan Tambahan untuk Admin (Opsional)</label>
+          <textarea name="catatanTambahan" placeholder="Tambahkan catatan atau pertanyaan untuk admin..." class="w-full px-6 py-3 border-2 border-gray-300 rounded-3xl focus:outline-none focus:border-purple-700 transition-colors resize-none" rows="3"></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-4">
+          <button type="submit" class="w-full px-8 py-4 bg-purple-700 text-white rounded-full hover:bg-purple-800 transition-colors">
+            Kirim Tugas untuk Verifikasi
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg">
+      <h3 class="text-blue-900 mb-2">Informasi:</h3>
+      <ul class="text-blue-800 text-sm space-y-1 list-disc list-inside">
+        <li>Pastikan semua dokumen yang diupload jelas dan terbaca</li>
+        <li>Format file: PDF untuk dokumen, JPG/PNG untuk screenshot</li>
+        <li>Maksimal ukuran file: 5MB per dokumen</li>
+        <li>Admin akan memverifikasi tugas dalam waktu 3-5 hari kerja</li>
+        <li>Anda akan menerima notifikasi melalui email setelah verifikasi selesai</li>
+      </ul>
+    </div>
+  </div>
+</body>
+
+</html>

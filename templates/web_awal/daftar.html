@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - Pelatihan Pendamping Proses Produk Halal (PPH)</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100">
+
+    <!-- Header -->
+    {% include 'web_awal/header.html' %}
+
+    <!-- Daftar Form -->
+    <main>
+        <div class="container mx-auto px-8 py-20">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-center text-gray-900 text-4xl font-bold mb-6">Daftar Akun</h1>
+                
+                <form action="/daftar" method="POST" class="bg-white rounded-xl shadow-lg p-10">
+                    <!-- Nama -->
+                    <div class="mb-6">
+                        <label for="name" class="block text-sm text-gray-600">Nama</label>
+                        <input type="text" id="name" name="name" placeholder="Nama Lengkap" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" required>
+                    </div>
+                    
+                    <!-- Alamat -->
+                    <div class="mb-6">
+                        <label for="Alamat" class="block text-sm text-gray-600">Alamat</label>
+                        <input type="Alamat" id="Alamat" name="Alamat" placeholder="Alamat" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" required>
+                    </div>
+
+                    <!-- Nomor Telpon -->
+                    <div class="mb-6">
+                        <label for="Nomor Telpon" class="block text-sm text-gray-600">Nomor Telpon</label>
+                        <input type="Nomor Telpon" id="Nomor Telpon" name="Nomor Telpon" placeholder="Nomor Telpon" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" required>
+                    </div>
+                    
+                    <!-- Pendidikan Terakhir -->
+                    <div class="mb-6">
+                        <label for="Pendidikan Terakhir" class="block text-sm text-gray-600">Pendidikan Terakhir</label>
+                        <input type="Pendidikan Terakhir" id="Pendidikan Terakhir" name="Pendidikan Terakhir" placeholder="Pendidikan Terakhir" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" required>
+                    </div>
+                    
+                     <!-- Pekerjaan -->
+                    <div class="mb-6">
+                        <label for="Pekerjaan" class="block text-sm text-gray-600">Pekerjaan</label>
+                        <input type="Pekerjaan" id="Pekerjaan" name="Pekerjaan" placeholder="Pekerjaan" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" required>
+                    </div>
+
+                    <div class="mb-6">
+                    <label for="ktp" class="block text-sm text-gray-600">Upload KTP (Bersifat Rahasia)</label>
+                    <input 
+                        type="file" 
+                        id="ktp" 
+                        name="ktp" 
+                        accept=".pdf" 
+                        class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100" 
+                        required
+                    >
+                    <p class="mt-1 text-xs text-gray-500">Hanya menerima file format .pdf</p>
+                </div>
+                    <!-- Email -->
+                    <div class="mb-6">
+                        <label for="email" class="block text-sm text-gray-600">Email</label>
+                        <input type="email" id="email" name="email" placeholder="example@mail.com" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" required>
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="mb-6">
+                        <label for="password" class="block text-sm text-gray-600">Password</label>
+                        <input type="password" id="password" name="password" placeholder="********" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" required>
+                    </div>
+                    
+                    <!-- Konfirmasi Password -->
+                    <div class="mb-6">
+                        <label for="confirm_password" class="block text-sm text-gray-600">Konfirmasi Password</label>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="********" class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" required>
+                    </div>
+
+                    <div class="mb-6">
+                        <button type="submit" class="w-full px-6 py-3 bg-purple-700 text-white rounded-full hover:bg-purple-800 transition-all font-medium">
+                            Daftar
+                        </button>
+                    </div>
+
+                    <p class="text-center text-sm text-gray-600">
+                        Sudah punya akun? <a href="/login" class="text-purple-600 hover:text-purple-700">Login di sini</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    {% include 'web_awal/footer.html' %}
+
+</body>
+</html>

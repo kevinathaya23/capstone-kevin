@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% block title %}{{ pu.nama_usaha }} – Detail Pelaku Usaha{% endblock %}
+{% block page_title %}Detail Pelaku Usaha{% endblock %}
+{% block breadcrumb %}LP3H &rsaquo; <a href="{{ url_for('daftar_pelaku_usaha') }}">Pelaku Usaha</a> &rsaquo; {{ pu.nama_usaha }}{% endblock %}
+
+{% block content %}
+{% set colors = {'Sertifikat Terbit':'success','Proses Pendampingan':'info','Verifikasi & Validasi':'primary','Menunggu Sidang Fatwa':'warning','Perbaikan':'warning','Ditolak':'danger','Belum Diajukan':'secondary'} %}
+
+<!-- HERO -->
+<div class="detail-hero fade-in-up" style="background:linear-gradient(135deg,#0f1923 0%,#1a4a6e 100%);">
+  <div style="width:70px;height:70px;background:var(--gold);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🏪</div>
+  <div class="info" style="flex:1;">
+    <h2>{{ pu.nama_usaha }}</h2>
+    <p>{{ pu.jenis_usaha }} · {{ pu.jenis_produk }}</p>
+    <div class="meta-chips">
+      <span class="meta-chip">👤 {{ pu.nama_pemilik }}</span>
+      <span class="meta-chip">📋 NIB: {{ pu.nib }}</span>
+      <span class="meta-chip">📍 {{ pu.alamat }}</span>
+      <span class="meta-chip">📅 Mulai: {{ pu.tanggal_mulai|formatdate }}</span>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+    <span class="badge badge-{{ colors.get(pu.status,'secondary') }}" style="font-size:13px;padding:8px 18px;">
+      {{ pu.status }}
+    </span>
+    {% if current_user.role == 'admin' %}
+    <button class="btn btn-gold btn-sm" onclick="document.getElementById('updateStatusModal').classList.add('show')">✏️ Update Status</button>
+    {% elif current_user.role == 'pendamping' %}
+    <button class="btn btn-primary btn-sm" onclick="document.getElementById('updateStatusModal').classList.add('show')">🔄 Update Status</button>
+    {% endif %}
+  </div>
+</div>
+
+<div class="grid-21 fade-in-up">
+  <!-- KIRI: Timeline + Catatan -->
+  <div style="display:flex;flex-direction:column;gap:22px;">
+
+    <!-- Timeline Status -->
+    <div class="card">
+      <div class="card-header">
+        <h3>🔄 Timeline Status Pengajuan</h3>
+        <span style="font-size:12px;color:var(--text-muted);">Terakhir diperbarui: {{ pu.terakhir_update|formatdate }}</span>
+      </div>
+      <div class="card-body">
+        <ul class="timeline">
+          {% for h in history %}
+          <li class="timeline-item">
+            <div class="timeline-dot {{ 'badge-success' if h.status == 'Sertifikat Terbit' else 'badge-info' if h.status == 'Proses Pendampingan' else 'badge-warning' if h.status in ['Perbaikan','Menunggu Sidang Fatwa'] else 'badge-primary' }}"
+              style="background:var(--{{ colors.get(h.status,'secondary') }}-bg);color:var(--{{ colors.get(h.status,'secondary') }});">
+              {% if h.status == 'Sertifikat Terbit' %}✅{% elif h.status == 'Ditolak' %}❌{% elif h.status == 'Perbaikan' %}🔧{% else %}⚙️{% endif %}
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-title">{{ h.status }}</div>
+              <div class="timeline-date">{{ h.tanggal|formatdate }} · oleh {{ h.oleh }}</div>
+              <div class="timeline-note">{{ h.catatan }}</div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Catatan & Tindak Lanjut -->
+    <div class="card">
+      <div class="card-header">
+        <h3>📝 Catatan Pendamping</h3>
+        {% if current_user.role in ['admin', 'pendamping'] %}
+        <button class="btn btn-sm btn-outline" onclick="alert('Edit catatan: hubungkan ke backend.')">✏️ Edit</button>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <p style="font-size:13.5px;line-height:1.7;color:var(--text-main);">
+          {{ pu.catatan or 'Belum ada catatan.' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Checklist Dokumen (simulasi) -->
+    <div class="card">
+      <div class="card-header"><h3>📁 Checklist Dokumen</h3></div>
+      <div class="card-body p-0">
+        {% set dokumen = [
+          ('KTP / NIK Pemilik', True),
+          ('NIB (Nomor Induk Berusaha)', True),
+          ('Daftar Produk Halal', True),
+          ('Proses Produksi / SOP', True),
+          ('Foto Produk', False),
+          ('Sertifikat Bahan Baku (jika ada)', False),
+        ] %}
+        {% for doc, ada in dokumen %}
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 22px;border-bottom:1px solid var(--border);">
+          <div style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;background:{{ 'var(--success-bg)' if ada else 'var(--danger-bg)' }};">
+            {{ '✅' if ada else '❌' }}
+          </div>
+          <span style="font-size:13.5px;{{ 'color:var(--text-main)' if ada else 'color:var(--text-muted)' }};">{{ doc }}</span>
+          {% if ada %}
+          <span class="badge badge-success" style="margin-left:auto;">Lengkap</span>
+          {% else %}
+          <span class="badge badge-danger" style="margin-left:auto;">Belum Ada</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        {% if current_user.role in ['admin', 'pendamping'] %}
+        <div style="padding:14px 22px;">
+          <input type="file" class="form-control" style="margin-bottom:8px;" accept=".pdf,.jpg,.png">
+          <button class="btn btn-sm btn-primary" onclick="alert('Upload dokumen: hubungkan ke backend.')">⬆ Upload Dokumen</button>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- KANAN: Info Usaha + Pendamping -->
+  <div style="display:flex;flex-direction:column;gap:22px;">
+
+    <!-- Info Usaha -->
+    <div class="card">
+      <div class="card-header"><h3>🏪 Data Pelaku Usaha</h3></div>
+      <div class="card-body">
+        <table style="width:100%;border-collapse:collapse;font-size:13.5px;">
+          {% set masking = current_user.role in ['pimpinan', 'pelaku_usaha'] %}
+          {% set rows = [
+            ('Nama Usaha', pu.nama_usaha),
+            ('Nama Pemilik', pu.nama_pemilik),
+            ('NIK', pu.nik if not masking else '****'),
+            ('NIB', pu.nib),
+            ('Alamat', pu.alamat),
+            ('No. HP', pu.kontak),
+            ('Jenis Usaha', pu.jenis_usaha),
+            ('Jenis Produk', pu.jenis_produk),
+            ('Tgl Mulai Pendampingan', pu.tanggal_mulai|formatdate),
+          ] %}
+          {% for label, val in rows %}
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px 0;color:var(--text-muted);width:45%;font-weight:500;font-size:12.5px;">{{ label }}</td>
+            <td style="padding:10px 0;font-weight:600;">{{ val }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+
+    <!-- Info Pendamping -->
+    {% if pendamping %}
+    <div class="card">
+      <div class="card-header">
+        <h3>👤 Pendamping Penanggung Jawab</h3>
+        {% if current_user.role == 'admin' %}
+        <a href="{{ url_for('penugasan') }}" class="btn btn-sm btn-outline">Reassign</a>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+          <div class="avatar avatar-lg av-{{ pendamping.id % 10 }}">{{ pendamping.avatar }}</div>
+          <div>
+            <div style="font-weight:700;font-size:15px;">{{ pendamping.nama }}</div>
+            <div style="font-size:13px;color:var(--text-muted);">{{ pendamping.no_registrasi }}</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span>📍</span> {{ pendamping.wilayah }}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span>📞</span> {{ pendamping.kontak }}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span>📧</span> {{ pendamping.email }}
+          </div>
+        </div>
+        <!-- WhatsApp Button -->
+        <a href="https://wa.me/{{ pendamping.kontak|replace('+','') }}" target="_blank"
+          class="btn btn-primary w-full" style="margin-top:16px;justify-content:center;background:#25D366;">
+          💬 Hubungi via WhatsApp
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Status di semua tahap -->
+    <div class="card">
+      <div class="card-header"><h3>📊 Tahapan Sertifikasi Halal</h3></div>
+      <div class="card-body p-0">
+        {% set idx_saat_ini = STATUS_LIST.index(pu.status) %}
+        {% for s in STATUS_LIST %}
+        {% set i = loop.index0 %}
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 22px;border-bottom:1px solid var(--border);{% if i == idx_saat_ini %}background:var(--primary-subtle);{% endif %}">
+          <div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;background:{{ 'var(--primary)' if i == idx_saat_ini else 'var(--success-bg)' if i < idx_saat_ini else 'var(--bg)' }};color:{{ '#fff' if i <= idx_saat_ini else 'var(--text-muted)' }};">
+            {% if i < idx_saat_ini %}✓{% elif i == idx_saat_ini %}●{% else %}○{% endif %}
+          </div>
+          <span style="font-size:13px;font-weight:{{ '700' if i == idx_saat_ini else '400' }};color:{{ 'var(--primary)' if i == idx_saat_ini else 'var(--text-muted)' if i > idx_saat_ini else 'var(--text-main)' }};">
+            {{ s }}
+          </span>
+          {% if i == idx_saat_ini %}
+          <span class="badge badge-primary" style="margin-left:auto;font-size:10px;">Saat Ini</span>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Status Modal -->
+{% if current_user.role in ['admin', 'pendamping'] %}
+<div class="modal-overlay" id="updateStatusModal" onclick="if(event.target==this)this.classList.remove('show')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h4>🔄 Update Status Pendampingan</h4>
+      <button onclick="document.getElementById('updateStatusModal').classList.remove('show')" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--text-muted);">×</button>
+    </div>
+    <form method="POST" action="{{ url_for('update_status_pelaku', pid=pu.id) }}">
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Status Baru</label>
+          <select name="status" class="form-control" required>
+            {% for s in STATUS_LIST %}
+            <option value="{{ s }}" {{ 'selected' if s == pu.status }}>{{ s }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Catatan / Keterangan</label>
+          <textarea name="catatan" class="form-control" rows="3" placeholder="Tambahkan catatan tindak lanjut...">{{ pu.catatan }}</textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="document.getElementById('updateStatusModal').classList.remove('show')">Batal</button>
+        <button type="submit" class="btn btn-primary">💾 Simpan Perubahan</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

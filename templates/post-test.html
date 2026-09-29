@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post-Test - Pelatihan Pendamping Proses Produk Halal (PPH)</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .question-container {
+            display: none;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100">
+
+    <!-- Header setelah login -->
+    {% include 'headerlog.html' %}
+
+    <div class="container mx-auto px-8 py-20">
+        <!-- Tombol Mulai Post-Test -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-semibold text-gray-900 mb-4">Selamat Datang di Pelatihan</h1>
+            <p class="text-lg text-gray-700">Sekarang waktunya untuk mengerjakan Post-Test sebagai evaluasi akhir Anda.</p>
+            <button id="startPostTestBtn"
+                class="inline-block mt-4 px-8 py-3 bg-purple-700 text-white text-lg rounded-full hover:bg-purple-800 transition-all">
+                Mulai Post-Test
+            </button>
+        </div>
+
+        <!-- Post-Test Questions -->
+        <div id="questions-container" class="question-container bg-white p-8 rounded-xl shadow-lg mt-10">
+            <h2 class="text-3xl font-semibold text-center text-gray-900 mb-6">Post-Test Pelatihan</h2>
+
+            <form id="postTestForm">
+                <!-- Pertanyaan 1 -->
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">1. Yang dimaksud dengan sertifikasi self declare adalah (2 poin)</label>
+                <input type="radio" id="q1_a" name="q1" value="0">
+                <label for="q1_a">Permohonan sertifikasi halal dilakukan oleh semua Pelaku Usaha melalui pernyataan halal</label><br>
+                
+                <input type="radio" id="q1_b" name="q1" value="0">
+                <label for="q1_b">Permohonan sertifikasi halal dilakukan oleh Pelaku Usaha Menengah dan Besar melalui pernyataan halal</label><br>
+                
+                <input type="radio" id="q1_c" name="q1" value="2">
+                <label for="q1_c">Permohonan sertifikasi halal dilakukan oleh Pelaku Usaha Mikro dan kecil melalui pernyataan halal</label><br>
+                
+                <input type="radio" id="q1_d" name="q1" value="0">
+                <label for="q1_d">Permohonan sertifikasi halal dilakukan oleh Pelaku Usaha mikro, kecil, menengah dan besar melalui pernyataan halal</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">2. Undang - Undang yang mengatur tentang Jaminan Produk Halal di Indonesia adalah (2 poin)</label>
+                <input type="radio" id="q2_a" name="q2" value="0">
+                <label for="q2_a">UU No. 36 Tahun 2014</label><br>
+                
+                <input type="radio" id="q2_b" name="q2" value="0">
+                <label for="q2_b">UU No. 35 Tahun 2014</label><br>
+                
+                <input type="radio" id="q2_c" name="q2" value="0">
+                <label for="q2_c">UU No. 34 Tahun 2014</label><br>
+                
+                <input type="radio" id="q2_d" name="q2" value="2">
+                <label for="q2_d">UU No. 33 Tahun 2014</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">3. Lima kriteria Sistem Jaminan Produk Halal adalah: 1) Komitmen dan Tanggung Jawab, 2) Bahan, 3) Proses, 4) Produk, dan yang kelima adalah (2 poin)</label>
+                <input type="radio" id="q3_a" name="q3" value="0">
+                <label for="q3_a">Pelatihan Pendamping Halal</label><br>
+                
+                <input type="radio" id="q3_b" name="q3" value="0">
+                <label for="q3_b">Pemberian label halal</label><br>
+                
+                <input type="radio" id="q3_c" name="q3" value="0">
+                <label for="q3_c">Pemberian sertifikat halal</label><br>
+                
+                <input type="radio" id="q3_d" name="q3" value="2">
+                <label for="q3_d">Pemantauan dan Evaluasi</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">4. Kelompok bahan yang harus ada dalam pengisian bahan di sihalal terdiri dari (2 poin)</label>
+                <input type="radio" id="q4_a" name="q4" value="0">
+                <label for="q4_a">Bahan Penolong Pencucian</label><br>
+                
+                <input type="radio" id="q4_b" name="q4" value="2">
+                <label for="q4_b">Semua benar</label><br>
+                
+                <input type="radio" id="q4_c" name="q4" value="0">
+                <label for="q4_c">Bahan baku</label><br>
+                
+                <input type="radio" id="q4_d" name="q4" value="0">
+                <label for="q4_d">Kemasan Produk</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">5. Kriteria dari bahan untuk sertifikasi self declare adalah (2 poin)</label>
+                <input type="radio" id="q5_a" name="q5" value="0">
+                <label for="q5_a">Bahan di luar positive list dapat digunakan tanpa adanya dukungan dokumen</label><br>
+                
+                <input type="radio" id="q5_b" name="q5" value="2">
+                <label for="q5_b">Bahan yang digunakan sudah dipastikan kehalalannya dibuktikan dengan sertifikat halal</label><br>
+                
+                <input type="radio" id="q5_c" name="q5" value="0">
+                <label for="q5_c">Tidak ada jawaban yang benar</label><br>
+                
+                <input type="radio" id="q5_d" name="q5" value="0">
+                <label for="q5_d">Boleh menggunakan bahan berbahaya asalkan jumlahnya tidak banyak</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">6. Yang tidak termasuk ke dalam kriteria dari produk yang telah dinyatakan halal sesuai dengan syariat Islam adalah (2 poin)</label>
+                <input type="radio" id="q6_a" name="q6" value="0">
+                <label for="q6_a">Tidak menggunakan nama minuman beralkohol</label><br>
+                
+                <input type="radio" id="q6_b" name="q6" value="0">
+                <label for="q6_b">Tidak menggunakan nama babi dan anjing serta turunannya</label><br>
+                
+                <input type="radio" id="q6_c" name="q6" value="0">
+                <label for="q6_c">Tidak bertentangan dengan akidah Islam</label><br>
+                
+                <input type="radio" id="q6_d" name="q6" value="2">
+                <label for="q6_d">Mengarah pada hal yang menimbulkan kekufuran/kemaksiatan</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">7. Dalam peraturan pemerintah no 42 tahun 2024, yang berhak melakukan pendampingan PPH adalah (2 poin)</label>
+                <input type="radio" id="q7_a" name="q7" value="0">
+                <label for="q7_a">Perguruan tinggi</label><br>
+                
+                <input type="radio" id="q7_b" name="q7" value="0">
+                <label for="q7_b">Instansi pemerintah</label><br>
+                
+                <input type="radio" id="q7_c" name="q7" value="0">
+                <label for="q7_c">Ormas islam</label><br>
+                
+                <input type="radio" id="q7_d" name="q7" value="2">
+                <label for="q7_d">Semuanya benar</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">8. Rangkaian kegiatan untuk menjamin kehalalan produk mencakup penyediaan bahan, pengolahan, penyimpanan, pengemasan, pendistribusian, penjualan dan penyajian produk adalah pengertian dari (2 poin)</label>
+                <input type="radio" id="q8_a" name="q8" value="2">
+                <label for="q8_a">Proses Produk Halal</label><br>
+                
+                <input type="radio" id="q8_b" name="q8" value="0">
+                <label for="q8_b">Semua salah</label><br>
+                
+                <input type="radio" id="q8_c" name="q8" value="0">
+                <label for="q8_c">Ketentuan Proses Produk Halal</label><br>
+                
+                <input type="radio" id="q8_d" name="q8" value="0">
+                <label for="q8_d">Prinsip Dasar Proses Produk Halal</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">9. Yang wajib menggunakan halal dedicated facility (2 poin)</label>
+                <input type="radio" id="q9_a" name="q9" value="0">
+                <label for="q9_a">Outlet restoran</label><br>
+                
+                <input type="radio" id="q9_b" name="q9" value="2">
+                <label for="q9_b">Semua benar</label><br>
+                
+                <input type="radio" id="q9_c" name="q9" value="0">
+                <label for="q9_c">Rumah Potong Hewan</label><br>
+                
+                <input type="radio" id="q9_d" name="q9" value="0">
+                <label for="q9_d">Freezer untuk bagian tubuh hewan sembelihan</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">10. Produk yang masuk, beredar dan dipergangkan di wilayah Indonesia wajib bersertifikat halal. Hal ini merupakan mandatory kewajiban bersertifikat halal yang ada pada UU No. 33 Tahun 2014 pasal ? (2 poin)</label>
+                <input type="radio" id="q10_a" name="q10" value="0">
+                <label for="q10_a">1</label><br>
+                
+                <input type="radio" id="q10_b" name="q10" value="0">
+                <label for="q10_b">2</label><br>
+                
+                <input type="radio" id="q10_c" name="q10" value="0">
+                <label for="q10_c">3</label><br>
+                
+                <input type="radio" id="q10_d" name="q10" value="2">
+                <label for="q10_d">4</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">11. Yang termasuk kedalam produk yang wajib bersertifikat halal adalah (3 poin)</label>
+                <input type="radio" id="q11_a" name="q11" value="0">
+                <label for="q11_a">Obat-obatan</label><br>
+                
+                <input type="radio" id="q11_b" name="q11" value="3">
+                <label for="q11_b">Semua benar</label><br>
+                
+                <input type="radio" id="q11_c" name="q11" value="0">
+                <label for="q11_c">Makanan & Minuman</label><br>
+                
+                <input type="radio" id="q11_d" name="q11" value="0">
+                <label for="q11_d">Kosmetika</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">12. Stakeholder yang berperan dalam Jaminan Produk Halal kecuali (3 poin)</label>
+                <input type="radio" id="q12_a" name="q12" value="0">
+                <label for="q12_a">MUI</label><br>
+                
+                <input type="radio" id="q12_b" name="q12" value="0">
+                <label for="q12_b">BPJPH</label><br>
+                
+                <input type="radio" id="q12_c" name="q12" value="3">
+                <label for="q12_c">KUA</label><br>
+                
+                <input type="radio" id="q12_d" name="q12" value="0">
+                <label for="q12_d">LP3H</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">13. Yang tidak termasuk kepada pelaksanaan penahapan kewajiban bersertifikat halal 17 Oktober 2024 yakni (3 poin)</label>
+                <input type="radio" id="q13_a" name="q13" value="0">
+                <label for="q13_a">Makanan & Minuman bagi usaha menengah</label><br>
+                
+                <input type="radio" id="q13_b" name="q13" value="0">
+                <label for="q13_b">Makanan & Minuman bagi usaha besar</label><br>
+                
+                <input type="radio" id="q13_c" name="q13" value="0">
+                <label for="q13_c">Jasa Penyembelihan</label><br>
+                
+                <input type="radio" id="q13_d" name="q13" value="3">
+                <label for="q13_d">Obat-obatan</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">14. Dokumen yang dibutuhkan saat pengajuan sertifikasi halal Self Declare, kecuali (3 poin)</label>
+                <input type="radio" id="q14_a" name="q14" value="0">
+                <label for="q14_a">Permohonan Pendaftaran Sertifikat Halal</label><br>
+                
+                <input type="radio" id="q14_b" name="q14" value="0">
+                <label for="q14_b">Foto Produk</label><br>
+                
+                <input type="radio" id="q14_c" name="q14" value="3">
+                <label for="q14_c">Ijazah</label><br>
+                
+                <input type="radio" id="q14_d" name="q14" value="0">
+                <label for="q14_d">Deskripsi Proses Produk Halal</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">15. Manfaat sertifikat halal bagi konsumen adalah (3 poin)</label>
+                <input type="radio" id="q15_a" name="q15" value="0">
+                <label for="q15_a">Memiliki kesempatan meraih Pasar Halal Global</label><br>
+                
+                <input type="radio" id="q15_b" name="q15" value="0">
+                <label for="q15_b">Meningkatkan kemampuan dalam pemasaran di Pasar/Negara muslim</label><br>
+                
+                <input type="radio" id="q15_c" name="q15" value="0">
+                <label for="q15_c">Produk akan memiliki Unique Selling Point</label><br>
+                
+                <input type="radio" id="q15_d" name="q15" value="3">
+                <label for="q15_d">Memberikan ketenangan</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">16. Allah SWT mewajibkan kita untuk mengkonsumsi pangan yang halal dan thayyib. Perintah ini terdapat dalam Al-Qur'an surat ? (3 poin)</label>
+                <input type="radio" id="q16_a" name="q16" value="0">
+                <label for="q16_a">Al Baqarah ayat 16</label><br>
+                
+                <input type="radio" id="q16_b" name="q16" value="3">
+                <label for="q16_b">Al Baqarah ayat 168</label><br>
+                
+                <input type="radio" id="q16_c" name="q16" value="0">
+                <label for="q16_c">Al Baqarah ayat 17</label><br>
+                
+                <input type="radio" id="q16_d" name="q16" value="0">
+                <label for="q16_d">Al Baqarah ayat 178</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">17. Makanan yang bisa dinikmati, memberi manfaat karena telah memenuhi standar kesehatan (gizi, protein, higienis, dll). Hal tersebut merupakan pengertian dari ? (3 poin)</label>
+                <input type="radio" id="q17_a" name="q17" value="0">
+                <label for="q17_a">Halal</label><br>
+                
+                <input type="radio" id="q17_b" name="q17" value="3">
+                <label for="q17_b">Thayyib</label><br>
+                
+                <input type="radio" id="q17_c" name="q17" value="0">
+                <label for="q17_c">Keduanya benar</label><br>
+                
+                <input type="radio" id="q17_d" name="q17" value="0">
+                <label for="q17_d">Keduanya salah</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">18. Yang dapat menjadi sebab keharaman makanan adalah (3 poin)</label>
+                <input type="radio" id="q18_a" name="q18" value="0">
+                <label for="q18_a">Mengandung bahan haram</label><br>
+                
+                <input type="radio" id="q18_b" name="q18" value="0">
+                <label for="q18_b">Terkena najis</label><br>
+                
+                <input type="radio" id="q18_c" name="q18" value="3">
+                <label for="q18_c">A dan B benar</label><br>
+                
+                <input type="radio" id="q18_d" name="q18" value="0">
+                <label for="q18_d">A dan B salah</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">19. Yang termasuk kedalam Najis Mutawashitoh (Sedang) adalah (2 poin)</label>
+                <input type="radio" id="q19_a" name="q19" value="2">
+                <label for="q19_a">Bangkai Binatang</label><br>
+                
+                <input type="radio" id="q19_b" name="q19" value="0">
+                <label for="q19_b">Air kencing bayi laki-laki belum usia 2 tahun</label><br>
+                
+                <input type="radio" id="q19_c" name="q19" value="0">
+                <label for="q19_c">Hal yang berasal dari anjing dan babi</label><br>
+                
+                <input type="radio" id="q19_d" name="q19" value="0">
+                <label for="q19_d">Darah yang mengalir dalam tubuh manusia</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">20. Contoh dari sesuatu yang halal dikonsumsi namun bisa menjadi haram jika terkena najis adalah (3 poin)</label>
+                <input type="radio" id="q20_a" name="q20" value="0">
+                <label for="q20_a">Makanan/minuman yang jatuh ke air</label><br>
+                
+                <input type="radio" id="q20_b" name="q20" value="0">
+                <label for="q20_b">Makanan/minuman yang jatuh ke lantai</label><br>
+                
+                <input type="radio" id="q20_c" name="q20" value="0">
+                <label for="q20_c">Daging babi</label><br>
+                
+                <input type="radio" id="q20_d" name="q20" value="3">
+                <label for="q20_d">Makanan/minuman yang terkena kotoran hewan</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">21. Standar alat penyembelihan, kecuali (3 poin)</label>
+                <input type="radio" id="q21_a" name="q21" value="0">
+                <label for="q21_a">Alat harus tajam</label><br>
+                
+                <input type="radio" id="q21_b" name="q21" value="0">
+                <label for="q21_b">Alat dimaksud bukan kuku</label><br>
+                
+                <input type="radio" id="q21_c" name="q21" value="3">
+                <label for="q21_c">Alat dimaksud adalah taring</label><br>
+                
+                <input type="radio" id="q21_d" name="q21" value="0">
+                <label for="q21_d">Alat dimaksud bukan tulang</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">22. Tenaga/seseorang yang melakukan proses verifikasi dan validasi pernyataan kehalalan oleh Pelaku Usaha adalah pengertian dari? (3 poin)</label>
+                <input type="radio" id="q22_a" name="q22" value="0">
+                <label for="q22_a">Proses Produk Halal</label><br>
+                
+                <input type="radio" id="q22_b" name="q22" value="0">
+                <label for="q22_b">Badan Penyelenggara Jaminan Produk Halal</label><br>
+                
+                <input type="radio" id="q22_c" name="q22" value="0">
+                <label for="q22_c">Majelis Ulama Indonesia</label><br>
+                
+                <input type="radio" id="q22_d" name="q22" value="3">
+                <label for="q22_d">Pendamping Proses Produk Halal</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">23. Yang tidak termasuk kepada menunjukkan integritas dan melaksanakan kode etik Pendamping PPH adalah (3 poin)</label>
+                <input type="radio" id="q23_a" name="q23" value="0">
+                <label for="q23_a">Obyektif, kritis dan transparan dalam menganalisis dan menyimpulkan temuan-temuan</label><br>
+                
+                <input type="radio" id="q23_b" name="q23" value="0">
+                <label for="q23_b">Tidak menerima suap</label><br>
+                
+                <input type="radio" id="q23_c" name="q23" value="0">
+                <label for="q23_c">Senantiasa menampilkan akhlakul karimah</label><br>
+                
+                <input type="radio" id="q23_d" name="q23" value="3">
+                <label for="q23_d">Negosiasi dengan Pelaku Usaha</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">24. Yang tidak termasuk kedalam persyaratan Pelaku Usaha yang bisa mendaftar sertifikat self-declare adalah (3 poin)</label>
+                <input type="radio" id="q24_a" name="q24" value="0">
+                <label for="q24_a">Memiliki proses produksi yang sederhana</label><br>
+                
+                <input type="radio" id="q24_b" name="q24" value="0">
+                <label for="q24_b">Memiliki NIB</label><br>
+                
+                <input type="radio" id="q24_c" name="q24" value="3">
+                <label for="q24_c">Memiliki beberapa outlet</label><br>
+                
+                <input type="radio" id="q24_d" name="q24" value="0">
+                <label for="q24_d">Memiliki omset di bawah Rp 500.000.000</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">25. Sesuatu yang belum diketahui (belum jelas) statusnya adalah definisi dari (3 poin)</label>
+                <input type="radio" id="q25_a" name="q25" value="0">
+                <label for="q25_a">Halal</label><br>
+                
+                <input type="radio" id="q25_b" name="q25" value="0">
+                <label for="q25_b">Haram</label><br>
+                
+                <input type="radio" id="q25_c" name="q25" value="3">
+                <label for="q25_c">Syubhat</label><br>
+                
+                <input type="radio" id="q25_d" name="q25" value="0">
+                <label for="q25_d">Makruh</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">26. Apa yang dimaksud dengan bahan nabati (3 poin)</label>
+                <input type="radio" id="q26_a" name="q26" value="0">
+                <label for="q26_a">Bahan yang berasal dari hewan, pada dasarnya halal</label><br>
+                
+                <input type="radio" id="q26_b" name="q26" value="3">
+                <label for="q26_b">Bahan yang berasal dari tumbuhan, pada dasarnya halal</label><br>
+                
+                <input type="radio" id="q26_c" name="q26" value="0">
+                <label for="q26_c">Bahan penolong</label><br>
+                
+                <input type="radio" id="q26_d" name="q26" value="0">
+                <label for="q26_d">Bahan pencuci</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">27. Produk makanan hasil fermentasi yang mengandung alkohol/etanol hukumnya (selama dalam prosesnya tidak menggunakan bahan haram dan apabila secara medis tidak membahayakan) (3 poin)</label>
+                <input type="radio" id="q27_a" name="q27" value="3">
+                <label for="q27_a">Halal</label><br>
+                
+                <input type="radio" id="q27_b" name="q27" value="0">
+                <label for="q27_b">Haram</label><br>
+                
+                <input type="radio" id="q27_c" name="q27" value="0">
+                <label for="q27_c">Syubhat</label><br>
+                
+                <input type="radio" id="q27_d" name="q27" value="0">
+                <label for="q27_d">Makruh</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">28. Titik kritis pada pembuatan roti adalah (3 poin)</label>
+                <input type="radio" id="q28_a" name="q28" value="0">
+                <label for="q28_a">Air</label><br>
+                
+                <input type="radio" id="q28_b" name="q28" value="0">
+                <label for="q28_b">Garam</label><br>
+                
+                <input type="radio" id="q28_c" name="q28" value="0">
+                <label for="q28_c">Telur</label><br>
+                
+                <input type="radio" id="q28_d" name="q28" value="3">
+                <label for="q28_d">Flavor (aroma)</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">29. Yang tidak termasuk ke dalam bahan positive list adalah (3 poin)</label>
+                <input type="radio" id="q29_a" name="q29" value="0">
+                <label for="q29_a">Air murni</label><br>
+                
+                <input type="radio" id="q29_b" name="q29" value="0">
+                <label for="q29_b">Buah segar</label><br>
+                
+                <input type="radio" id="q29_c" name="q29" value="0">
+                <label for="q29_c">Bahan herbal kering</label><br>
+                
+                <input type="radio" id="q29_d" name="q29" value="3">
+                <label for="q29_d">Gelatin</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">30. Di bawah ini, yang tidak termasuk ke dalam produk mikrobial adalah (3 poin)</label>
+                <input type="radio" id="q30_a" name="q30" value="0">
+                <label for="q30_a">Tempe</label><br>
+                
+                <input type="radio" id="q30_b" name="q30" value="0">
+                <label for="q30_b">Yogurt</label><br>
+                
+                <input type="radio" id="q30_c" name="q30" value="3">
+                <label for="q30_c">Minyak goreng</label><br>
+                
+                <input type="radio" id="q30_d" name="q30" value="0">
+                <label for="q30_d">Kecap</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">31. Siapa yang berhak melakukan verifikasi dan validasi pada pernyataan kehalalan produk oleh pelaku usaha? (2 poin)</label>
+                <input type="radio" id="q31_a" name="q31" value="0">
+                <label for="q31_a">Pelaku Usaha</label><br>
+                
+                <input type="radio" id="q31_b" name="q31" value="0">
+                <label for="q31_b">BPJPH</label><br>
+                
+                <input type="radio" id="q31_c" name="q31" value="0">
+                <label for="q31_c">MUI</label><br>
+                
+                <input type="radio" id="q31_d" name="q31" value="2">
+                <label for="q31_d">Pendamping Proses Produk Halal</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">32. Yang termasuk dalam SOP sertifikasi self-declare adalah (2 poin)</label>
+                <input type="radio" id="q32_a" name="q32" value="2">
+                <label for="q32_a">Pelaku usaha membuat akun dan mempersiapkan pengajuan sertifikasi halal</label><br>
+                
+                <input type="radio" id="q32_b" name="q32" value="0">
+                <label for="q32_b">Pendamping PPH membuat akun dan mempersiapkan pengajuan sertifikasi halal</label><br>
+                
+                <input type="radio" id="q32_c" name="q32" value="0">
+                <label for="q32_c">BPJPH membuat akun dan mempersiapkan pengajuan sertifikasi halal</label><br>
+                
+                <input type="radio" id="q32_d" name="q32" value="0">
+                <label for="q32_d">Semua Benar</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">33. Yang perlu dilakukan Pendamping PPH saat ditemukan ketidaksesuaian antara bahan yang didaftarkan dengan validasi di lapangan adalah (2 poin)</label>
+                <input type="radio" id="q33_a" name="q33" value="0">
+                <label for="q33_a">Memberikan toleransi</label><br>
+                
+                <input type="radio" id="q33_b" name="q33" value="0">
+                <label for="q33_b">Negosiasi dengan pelaku usaha</label><br>
+                
+                <input type="radio" id="q33_c" name="q33" value="2">
+                <label for="q33_c">Melakukan tindakan koreksi</label><br>
+                
+                <input type="radio" id="q33_d" name="q33" value="0">
+                <label for="q33_d">Semua salah</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">34. Saat hasil verifikasi dan validasi memenuhi standar halal, apa yang perlu dilakukan oleh Pendamping PPH? (2 poin)</label>
+                <input type="radio" id="q34_a" name="q34" value="0">
+                <label for="q34_a">Memberikan rekomendasi kepada MUI</label><br>
+                
+                <input type="radio" id="q34_b" name="q34" value="2">
+                <label for="q34_b">Memberikan rekomendasi kepada LP3H</label><br>
+                
+                <input type="radio" id="q34_c" name="q34" value="0">
+                <label for="q34_c">Memberikan rekomendasi kepada BPJPH</label><br>
+                
+                <input type="radio" id="q34_d" name="q34" value="0">
+                <label for="q34_d">Memberikan rekomendasi kepada Perguruan Tinggi</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">35. Dalam melakukan verifikasi dan validasi bahan, perlu memeriksa dokumen bahan. Tindakan tersebut merupakan tindakan yang ... (2 poin)</label>
+                <input type="radio" id="q35_a" name="q35" value="2">
+                <label for="q35_a">Benar</label><br>
+                
+                <input type="radio" id="q35_b" name="q35" value="0">
+                <label for="q35_b">Tidak benar</label><br>
+                
+                <input type="radio" id="q35_c" name="q35" value="0">
+                <label for="q35_c">Ragu-ragu</label><br>
+                
+                <input type="radio" id="q35_d" name="q35" value="0">
+                <label for="q35_d">Tidak tahu</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">36. Makanan halal dan thayyib memiliki kolerasi yang sangat kuat terhadap kesehatan manusia. Pernyataan ini adalah (2 poin)</label>
+                <input type="radio" id="q36_a" name="q36" value="2">
+                <label for="q36_a">Benar</label><br>
+                
+                <input type="radio" id="q36_b" name="q36" value="0">
+                <label for="q36_b">Tidak benar</label><br>
+                
+                <input type="radio" id="q36_c" name="q36" value="0">
+                <label for="q36_c">Ragu-ragu</label><br>
+                
+                <input type="radio" id="q36_d" name="q36" value="0">
+                <label for="q36_d">Tidak tahu</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">37. Syarat yang harus dipenuhi untuk dapat menempuh jalur self-declare adalah (2 poin)</label>
+                <input type="radio" id="q37_a" name="q37" value="0">
+                <label for="q37_a">Menggunakan alat produksi modern</label><br>
+                
+                <input type="radio" id="q37_b" name="q37" value="0">
+                <label for="q37_b">Minimal memiliki lebih dari satu outlet</label><br>
+                
+                <input type="radio" id="q37_c" name="q37" value="2">
+                <label for="q37_c">Proses produksi sederhana</label><br>
+                
+                <input type="radio" id="q37_d" name="q37" value="0">
+                <label for="q37_d">Produk yang dihasilkan berupa barang dan jasa</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">38. Mana yang benar mengenai ketentuan terkait produk minuman yang mengandung alkohol (Fatwa MUI no 10 tahun 2018) (3 poin)</label>
+                <input type="radio" id="q38_a" name="q38" value="0">
+                <label for="q38_a">Produk minuman hasil fermentasi yang mengandung alkohol/etanol minimal 0.5%, hukumnya haram</label><br>
+                
+                <input type="radio" id="q38_b" name="q38" value="0">
+                <label for="q38_b">Produk minuman hasil fermentasi yang mengandung alkohol/etanol kurang dari 0.5% hukumnya halal jika secara medis tidak membahayakan</label><br>
+                
+                <input type="radio" id="q38_c" name="q38" value="3">
+                <label for="q38_c">Semua benar</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">39. Titik kritis minyak wijen adalah di penggunaan (3 poin)</label>
+                <input type="radio" id="q39_a" name="q39" value="0">
+                <label for="q39_a">Bahan wijen</label><br>
+                
+                <input type="radio" id="q39_b" name="q39" value="3">
+                <label for="q39_b">Karbon aktif</label><br>
+                
+                <input type="radio" id="q39_c" name="q39" value="0">
+                <label for="q39_c">Semua salah</label><br>
+                
+                <input type="radio" id="q39_d" name="q39" value="0">
+                <label for="q39_d">Semua benar</label>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm text-gray-600 mb-2">40. Berikut adalah makanan atau minuman yang diharamkan dalam Al Qur’an, kecuali (3 poin)</label>
+                <input type="radio" id="q40_a" name="q40" value="0">
+                <label for="q40_a">Babi</label><br>
+                
+                <input type="radio" id="q40_b" name="q40" value="0">
+                <label for="q40_b">Khamr</label><br>
+                
+                <input type="radio" id="q40_c" name="q40" value="3">
+                <label for="q40_c">Hewan yang menjijikkan</label><br>
+                
+                <input type="radio" id="q40_d" name="q40" value="0">
+                <label for="q40_d">Bangkai</label>
+            </div>
+
+                <!-- Submit Button -->
+                <button type="button" id="submitBtn"
+                    class="mt-6 px-6 py-3 bg-purple-700 text-white rounded-full hover:bg-purple-800 transition-all">Kirim
+                    Jawaban</button>
+            </form>
+
+            <div id="resultContainer" class="mt-10 text-center" style="display: none;">
+                <h3 class="text-xl font-semibold text-gray-900">Skor Anda:</h3>
+                <p id="score" class="text-2xl font-bold text-purple-700"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Menyembunyikan soal sebelum "Mulai Post-Test" diklik
+        const startBtn = document.getElementById('startPostTestBtn');
+        const questionsContainer = document.getElementById('questions-container');
+
+        // Ketika tombol "Mulai Post-Test" diklik
+        startBtn.addEventListener('click', function () {
+            questionsContainer.classList.remove('question-container'); // Menghilangkan class penyembunyian soal
+            questionsContainer.classList.add('fadeIn'); // Menambahkan animasi fade-in
+            startBtn.style.display = 'none'; // Menyembunyikan tombol "Mulai Post-Test"
+        });
+
+        // Fungsi untuk menghitung skor dan submit test
+        document.getElementById("submitBtn").addEventListener("click", function () {
+            
+            // 1. Validasi: Pastikan semua 40 soal sudah dijawab (Opsional tapi disarankan)
+            const totalAnswered = document.querySelectorAll('input[type="radio"]:checked').length;
+            if (totalAnswered < 40) {
+                alert("Mohon jawab semua 40 pertanyaan sebelum mengirim!");
+                return; // Stop proses jika belum lengkap
+            }
+
+            // 2. Hitung Skor Lokal (Hanya untuk tampilan ke user)
+            let localScore = 0;
+            const answers = document.querySelectorAll('input[type="radio"]:checked');
+            answers.forEach(answer => {
+                localScore += parseInt(answer.value);
+            });
+
+            // 3. Persiapkan Data untuk dikirim ke Backend
+            const formElement = document.getElementById('postTestForm'); // Pastikan ID form sesuai
+            const formData = new FormData(formElement);
+            
+            // Ubah FormData menjadi URLSearchParams agar formatnya sesuai dengan 'application/x-www-form-urlencoded'
+            const searchParams = new URLSearchParams(formData);
+
+            // Kirim data ke server
+            fetch('/submit_post_test', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                // Body dikirim otomatis berisi q1=..&q2=.. dst sampai q40
+                body: searchParams 
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Tampilkan skor dari respons server (lebih akurat) atau skor lokal
+                document.getElementById('score').textContent = data.score + " Poin";
+                
+                document.getElementById('resultContainer').style.display = 'block';
+                document.getElementById('postTestForm').style.display = 'none'; // Sembunyikan form
+                window.scrollTo(0, 0); // Scroll ke atas agar hasil terlihat
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Terjadi kesalahan saat mengirim jawaban.");
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>

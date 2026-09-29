@@ -1,0 +1,69 @@
+<!-- Header -->
+<header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-8">
+        <div class="flex items-center justify-between py-4">
+            <!-- Logo dan Nama -->
+            <div class="flex items-center gap-4">
+                <img src="{{ url_for('static', filename='img/Logo-Halal.png') }}" alt="HALAL Indonesia" class="h-12 w-auto">
+                <div class="border-l-2 border-gray-300 pl-4">
+                    <div class="text-gray-900 font-semibold">LP3H</div>
+                    <div class="text-gray-600 text-sm">Telkom University</div>
+                </div>
+            </div>
+
+            <!-- Navigasi -->
+            <nav class="flex gap-8">
+                <a href="{{ url_for('dashboard') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Beranda</a>
+                {% if session.get('role') == 'admin' %}
+                    <a href="{{ url_for('evaluasi') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Evaluasi</a>
+                    <a href="{{ url_for('penilaian') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Penilaian</a>
+                    <a href="{{ url_for('jadwal') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Jadwal</a>
+                {% else %}
+                    <a href="{{ url_for('module') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Module</a>
+                    <!-- Dropdown untuk Test -->
+                    <div class="relative">
+                        <button id="testButton" class="text-gray-700 hover:text-purple-700 transition-colors">
+                            Test <span class="text-sm">&#9660;</span>
+                        </button>
+                        <div id="testDropdown" class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden">
+                            <a href="{{ url_for('pre_test') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Pre-Test</a>
+                            <a href="{{ url_for('post_test') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Post-Test</a>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('uji_praktik') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Uji Praktik</a>
+                    <a href="{{ url_for('kontak_us') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Kontak</a>
+                {% endif %}
+
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('logout_user') }}" class="text-yellow-400 hover:text-yellow-500 transition-colors">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Login</a>
+                    <a href="{{ url_for('daftar') }}" class="text-purple-700 hover:text-purple-800 transition-colors">Daftar</a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Mendapatkan elemen tombol dan dropdown
+    const testButton = document.getElementById('testButton');
+    const testDropdown = document.getElementById('testDropdown');
+
+    // Menambahkan event listener untuk menampilkan/menghilangkan dropdown saat tombol diklik
+    testButton.addEventListener('click', function(event) {
+        // Mencegah event klik pada tombol propogasi ke elemen lain
+        event.stopPropagation();
+        
+        // Toggle class 'hidden' untuk menampilkan/menyembunyikan dropdown
+        testDropdown.classList.toggle('hidden');
+    });
+
+    // Menambahkan event listener untuk menutup dropdown jika pengguna mengklik di luar dropdown
+    document.addEventListener('click', function(event) {
+        // Jika klik berada di luar tombol atau dropdown, sembunyikan dropdown
+        if (!testButton.contains(event.target) && !testDropdown.contains(event.target)) {
+            testDropdown.classList.add('hidden');
+        }
+    });
+</script>

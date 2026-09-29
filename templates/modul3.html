@@ -1,0 +1,32 @@
+<!-- module1.html (sebagai contoh) -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul 3 - Praktik Pembuatan NIB dan Pendaftaran SiHalal</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100">
+
+    <!-- Header setelah login -->
+    {% include 'headerlog.html' %}
+
+    <div class="container mx-auto px-8 py-20">
+        <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+            <!-- Gambar Modul -->
+            <img src="{{ url_for('static', filename='img/module3.png') }}" alt="Module 1" class="w-full h-auto mb-6">
+
+            <!-- Judul Modul -->
+            <h1 class="text-3xl font-semibold text-gray-800 mb-4">Module 3</h1>
+
+            <!-- Deskripsi Modul -->
+            <p class="text-gray-700 mb-6">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, urna at ultricies vulputate, nunc risus iaculis turpis, vitae egestas orci lacus non neque. Cras pharetra varius nisl, sed volutpat lacus pulvinar id. Mauris sit amet ligula a lorem tincidunt volutpat. Integer vel sapien non orci interdum commodo.
+            </p>
+
+        </div>
+    </div>
+
+</body>
+</html>

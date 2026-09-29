@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Sedang Nonaktif – LP3H</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      background: #f8fafc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .notice-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 520px;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="notice-card">
+    <div style="width:64px;height:64px;background:#fef3c7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px auto;color:#d97706;">
+      <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+    </div>
+    <h2 style="font-size:22px;font-weight:800;color:#0f172a;margin-bottom:12px;">Portal Pelacakan Sedang Nonaktif</h2>
+    <p style="color:#64748b;font-size:14px;line-height:1.6;margin-bottom:24px;">
+      Layanan pelacakan status mandiri pelaku usaha untuk sementara waktu sedang ditutup untuk pemeliharaan rutin atau sinkronisasi data dengan sistem BPJPH.
+    </p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="{{ url_for('login') }}" class="btn btn-primary" style="background:#059669;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;color:#fff;">
+        Masuk ke Sistem LP3H
+      </a>
+      <a href="https://ptsp.halal.go.id" target="_blank" rel="noopener" class="btn" style="border:1px solid #cbd5e1;padding:10px 20px;border-radius:10px;text-decoration:none;font-weight:600;font-size:13px;color:#334155;background:#fff;">
+        Kunjungi SIHALAL BPJPH
+      </a>
+    </div>
+  </div>
+</body>
+</html>

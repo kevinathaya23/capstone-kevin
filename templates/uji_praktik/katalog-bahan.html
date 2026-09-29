@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Bahan Halal</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        .status-label {
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .status-halal {
+            background-color: #d1fad7;
+            color: #2e8b57;
+            border: 1px solid #2e8b57;
+        }
+
+        .status-haram {
+            background-color: #fddede;
+            color: #e3342f;
+            border: 1px solid #e3342f;
+        }
+
+        .status-syubhat {
+            background-color: #fff4c3;
+            color: #d97706;
+            border: 1px solid #d97706;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            font-size: 16px;
+            text-gray-900;
+            hover:text-purple-700;
+            cursor: pointer;
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Hide sections by default */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100">
+
+    <!-- Include Header -->
+    {% include 'headerlog.html' %}
+
+        <div class="container mx-auto px-8 py-20">
+            <div class="max-w-7xl mx-auto">
+
+            <div class="mb-12">
+                <button onClick="window.history.back()" class="flex items-center gap-2 text-purple-600 font-bold text-sm uppercase tracking-wider hover:text-purple-800 transition-all mb-6">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Kembali ke Dashboard
+                </button>
+                <h1 class="text-gray-900 text-4xl md:text-5xl font-bold mb-4">Katalog Bahan Halal</h1>
+                <p class="text-gray-600 text-lg leading-relaxed max-w-3xl">
+                    Daftar bahan-bahan yang halal dan haram untuk digunakan dalam produksi
+
+                </p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl p-8 mb-6">
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <div class="flex-1 relative">
+                        <input id="search" type="text" placeholder="Cari bahan atau kategori..." class="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-full focus:outline-none focus:border-purple-700 transition-colors" oninput="filterBahan()">
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="filterStatus('semua')" class="px-6 py-3 rounded-full transition-colors bg-purple-700 text-white">Semua</button>
+                        <button onclick="filterStatus('halal')" class="px-6 py-3 rounded-full transition-colors bg-green-600 text-white">Halal</button>
+                        <button onclick="filterStatus('haram')" class="px-6 py-3 rounded-full transition-colors bg-red-600 text-white">Haram</button>
+                        <button onclick="filterStatus('syubhat')" class="px-6 py-3 rounded-full transition-colors bg-yellow-600 text-white">Syubhat</button>
+                    </div>
+                </div>
+
+                <div id="bahan-table" class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b-2 border-gray-200">
+                                <th class="text-left py-4 px-4 text-gray-900">Nama Bahan</th>
+                                <th class="text-left py-4 px-4 text-gray-900">Kategori</th>
+                                <th class="text-left py-4 px-4 text-gray-900">Status</th>
+                                <th class="text-left py-4 px-4 text-gray-900">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bahan-list">
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="no-results" class="text-center py-12 text-gray-500 hidden">
+                    Tidak ada bahan yang ditemukan
+                </div>
+            </div>
+
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg">
+                <h3 class="text-blue-900 mb-2">Catatan Penting:</h3>
+                <ul class="text-blue-800 text-sm space-y-1 list-disc list-inside">
+                    <li>Status <strong>Halal</strong>: Boleh digunakan tanpa keraguan</li>
+                    <li>Status <strong>Haram</strong>: Tidak boleh digunakan sama sekali</li>
+                    <li>Status <strong>Syubhat</strong>: Perlu verifikasi lebih lanjut, konsultasikan dengan auditor halal</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Bahan
+        const dataBahan = [
+            { nama: 'Garam', kategori: 'Bumbu & Rempah', status: 'halal', keterangan: 'Aman digunakan, bahan alami' },
+            { nama: 'Gula Pasir', kategori: 'Pemanis', status: 'halal', keterangan: 'Halal jika proses tidak menggunakan bahan haram' },
+            { nama: 'Gelatin Sapi', kategori: 'Pengental', status: 'halal', keterangan: 'Halal jika dari hewan yang disembelih sesuai syariat' },
+            { nama: 'Gelatin Babi', kategori: 'Pengental', status: 'haram', keterangan: 'Berasal dari babi, tidak boleh digunakan' },
+            { nama: 'Vanili', kategori: 'Perisa', status: 'halal', keterangan: 'Ekstrak alami, halal untuk digunakan' },
+            { nama: 'Alkohol Industri', kategori: 'Pelarut', status: 'syubhat', keterangan: 'Perlu cek sumber dan kadar, konsultasikan dengan ahli' },
+            { nama: 'Minyak Kelapa Sawit', kategori: 'Minyak', status: 'halal', keterangan: 'Nabati, aman digunakan' },
+            { nama: 'Shortening', kategori: 'Lemak', status: 'syubhat', keterangan: 'Perlu cek sumber lemak, bisa dari nabati atau hewani' },
+            { nama: 'Tepung Terigu', kategori: 'Tepung', status: 'halal', keterangan: 'Berbahan dasar gandum, halal' },
+            { nama: 'Pewarna Carmine (E120)', kategori: 'Pewarna', status: 'haram', keterangan: 'Berasal dari serangga, tidak dianjurkan' },
+            { nama: 'MSG (Monosodium Glutamate)', kategori: 'Penyedap', status: 'halal', keterangan: 'Halal jika proses fermentasi tidak menggunakan media haram' },
+            { nama: 'Enzim Rennet', kategori: 'Enzim', status: 'syubhat', keterangan: 'Perlu cek sumber, bisa dari sapi atau mikroba' }
+        ];
+
+        // Function to update the table with filtered data
+        function updateTable(filteredData) {
+            const tableBody = document.getElementById('bahan-list');
+            const noResults = document.getElementById('no-results');
+            tableBody.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            }
+            noResults.classList.add('hidden');
+
+            filteredData.forEach(bahan => {
+                const row = document.createElement('tr');
+                row.classList.add('border-b', 'border-gray-100', 'hover:bg-gray-50');
+
+                row.innerHTML = `
+                    <td class="py-4 px-4 text-gray-900">${bahan.nama}</td>
+                    <td class="py-4 px-4 text-gray-700">${bahan.kategori}</td>
+                    <td class="py-4 px-4">
+                        <span class="status-label ${getStatusClass(bahan.status)}">${bahan.status.toUpperCase()}</span>
+                    </td>
+                    <td class="py-4 px-4 text-gray-600 text-sm">${bahan.keterangan}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to filter the data based on status
+        function filterStatus(status) {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const filteredData = dataBahan.filter(bahan => {
+                const matchStatus = status === 'semua' || bahan.status === status;
+                const matchSearch = bahan.nama.toLowerCase().includes(searchTerm) || bahan.kategori.toLowerCase().includes(searchTerm);
+                return matchStatus && matchSearch;
+            });
+            updateTable(filteredData);
+        }
+
+        // Function to get the corresponding class for status
+        function getStatusClass(status) {
+            switch (status) {
+                case 'halal': return 'status-halal';
+                case 'haram': return 'status-haram';
+                case 'syubhat': return 'status-syubhat';
+                default: return '';
+            }
+        }
+
+        // Initialize table with all data
+        updateTable(dataBahan);
+
+        // Function for back button
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+</body>
+
+</html>

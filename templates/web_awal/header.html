@@ -1,0 +1,30 @@
+<header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-8">
+        <div class="flex items-center justify-between py-4">
+            <!-- Logo dan Nama -->
+            <div class="flex items-center gap-4">
+                <img src="{{ url_for('static', filename='img/Logo-Halal.png') }}" alt="HALAL Indonesia" class="h-12 w-auto">
+                <div class="border-l-2 border-gray-300 pl-4">
+                    <div class="text-gray-900 font-semibold">LP3H</div>
+                    <div class="text-gray-600 text-sm">Telkom University</div>
+                </div>
+            </div>
+            <!-- Navigasi -->
+            <nav class="flex gap-8">
+                <a href="{{ url_for('index') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Beranda</a>
+                <a href="{{ url_for('tentang') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Tentang</a>
+                <a href="{{ url_for('layanan') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Layanan</a>
+                <a href="{{ url_for('kontak') }}" class="text-gray-700 hover:text-purple-700 transition-colors">Kontak</a>
+            </nav>
+            <!-- Tombol Login dan Daftar -->
+            <div class="flex gap-3">
+                <a href="{{ url_for('login') }}" class="px-6 py-2 bg-yellow-400 text-gray-900 rounded-full hover:bg-yellow-500 transition-all hover:shadow-lg font-medium">
+                    Login
+                </a>
+                <a href="{{ url_for('daftar') }}" class="px-6 py-2 bg-purple-700 text-white rounded-full hover:bg-purple-800 transition-all hover:shadow-lg font-medium">
+                    Daftar
+                </a>
+            </div>
+        </div>
+    </div>
+</header>

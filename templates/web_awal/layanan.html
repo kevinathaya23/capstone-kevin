@@ -1,0 +1,55 @@
+<!-- layanan.html -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layanan Pelatihan Pendamping Proses Produk Halal (PPH)</title>
+    <!-- Link ke Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100">
+
+    <!-- Header -->
+    {% include 'web_awal/header.html' %}
+
+    <!-- Main Content (Layanan) -->
+    <main>
+        <div class="container mx-auto px-8 py-20">
+            <div class="max-w-7xl mx-auto">
+                <h1 class="text-gray-900 text-4xl font-bold mb-6">Layanan Kami</h1>
+                <p class="text-gray-700 leading-relaxed mb-8">
+                    Kami menyediakan berbagai layanan dalam rangka mendukung pelaku usaha mikro dan kecil untuk memperoleh sertifikat halal dan memahami proses sertifikasi halal dengan baik. Berikut adalah layanan yang kami tawarkan:
+                </p>
+
+                <!-- Daftar Layanan -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h2 class="text-gray-900 text-xl font-semibold mb-4">Pelatihan Halal</h2>
+                        <p class="text-gray-700">Pelatihan ini memberikan pengetahuan tentang proses sertifikasi halal dan standar halal yang diterapkan di Indonesia.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h2 class="text-gray-900 text-xl font-semibold mb-4">Sertifikasi</h2>
+                        <p class="text-gray-700">Kami membantu pelaku usaha dalam mempersiapkan semua yang diperlukan untuk proses sertifikasi halal, termasuk pendampingan langsung.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h2 class="text-gray-900 text-xl font-semibold mb-4">Konsultasi</h2>
+                        <p class="text-gray-700">Kami menyediakan layanan konsultasi bagi pelaku usaha untuk mempermudah pemahaman proses sertifikasi halal dan persiapannya.</p>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h2 class="text-gray-900 text-xl font-semibold mb-4">Pendampingan</h2>
+                        <p class="text-gray-700">Pendampingan langsung dalam proses sertifikasi halal untuk memastikan usaha kecil dan mikro memenuhi standar yang ditetapkan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    {% include 'web_awal/footer.html' %}
+
+</body>
+</html>

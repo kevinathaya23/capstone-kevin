@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Pengaturan Sistem – LP3H{% endblock %}
+{% block page_title %}Pengaturan Sistem LP3H{% endblock %}
+{% block breadcrumb %}LP3H &rsaquo; Pengaturan{% endblock %}
+
+{% block content %}
+<div class="fade-in-up" style="max-width:960px;">
+  <form method="POST" action="{{ url_for('pengaturan') }}">
+    <!-- Portal Pelaku Usaha Setting Card -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-header">
+        <h3>
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+          Portal Pelacakan Pelaku Usaha (Publik)
+        </h3>
+        <span class="badge {% if settings.portal_pelaku_aktif %}badge-success{% else %}badge-danger{% endif %}">
+          {% if settings.portal_pelaku_aktif %}Aktif{% else %}Nonaktif{% endif %}
+        </span>
+      </div>
+      <div style="padding:24px;">
+        <p style="color:var(--text-secondary);font-size:13.5px;margin-bottom:20px;line-height:1.6;">
+          Portal ini memungkinkan Pelaku Usaha mengecek status pendampingan sertifikasi halal mereka secara mandiri menggunakan NIB tanpa perlu login, atau login untuk melihat kontak pendamping dan riwayat proses.
+        </p>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg-hover);padding:18px 20px;border-radius:12px;border:1px solid var(--border-color);">
+          <div>
+            <div style="font-weight:700;font-size:15px;color:var(--text-main);margin-bottom:4px;">Aktifkan Portal Pelaku Usaha</div>
+            <div style="font-size:13px;color:var(--text-muted);">Jika dinonaktifkan, halaman <a href="{{ url_for('portal_cek_status') }}" target="_blank" style="color:var(--primary-emerald);text-decoration:underline;">/portal/cek-status</a> akan menampilkan halaman pemeliharaan.</div>
+          </div>
+          <label style="position:relative;display:inline-block;width:52px;height:28px;cursor:pointer;flex-shrink:0;">
+            <input type="checkbox" name="portal_pelaku_aktif" {% if settings.portal_pelaku_aktif %}checked{% endif %} style="opacity:0;width:0;height:0;" id="portalToggle">
+            <span class="slider" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:{% if settings.portal_pelaku_aktif %}var(--primary-emerald){% else %}#cbd5e1{% endif %};transition:.3s;border-radius:34px;">
+              <span style="position:absolute;content:'';height:22px;width:22px;left:{% if settings.portal_pelaku_aktif %}26px{% else %}3px{% endif %};bottom:3px;background-color:white;transition:.3s;border-radius:50%;box-shadow:0 2px 4px rgba(0,0,0,0.2);"></span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Informasi Lembaga Card -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-header">
+        <h3>
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+          Profil Lembaga Pendamping (LP3H)
+        </h3>
+      </div>
+      <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="form-group">
+          <label class="form-label" style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">Nama Lembaga LP3H</label>
+          <input type="text" class="form-control" value="LP3H UIN Sunan Gunung Djati Bandung" readonly style="background:var(--bg-hover);">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">Nomor Registrasi BPJPH</label>
+          <input type="text" class="form-control" value="LP3H-BPJPH-32001-2022" readonly style="background:var(--bg-hover);">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">Email Resmi Sekretariat</label>
+          <input type="email" class="form-control" value="halal.center@lp3h.ac.id">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">Nomor Telepon / Helpdesk</label>
+          <input type="text" class="form-control" value="+62 22 7800 1234">
+        </div>
+        <div class="form-group" style="grid-column:1 / -1;">
+          <label class="form-label" style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">Alamat Kantor Lembaga</label>
+          <input type="text" class="form-control" value="Gedung Halal Center Lt. 2, Kampus 1, Jl. A.H. Nasution No. 105, Bandung 40614">
+        </div>
+      </div>
+    </div>
+
+    <!-- Parameter Monitoring & Notifikasi -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-header">
+        <h3>
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          Kebijakan Peringatan Masa Berlaku SK & Sertifikat Kompetensi
+        </h3>
+      </div>
+      <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="form-group">
+          <label class="form-label" style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">Batas Peringatan "Segera Habis" (Hari)</label>
+          <input type="number" class="form-control" value="90" min="15" max="180">
+          <span style="font-size:12px;color:var(--text-muted);margin-top:4px;display:block;">Notifikasi lencana kuning muncul jika sisa masa berlaku &le; hari ini.</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="font-weight:600;font-size:13px;display:block;margin-bottom:6px;">Target Minimal Pendampingan / Bulan</label>
+          <input type="number" class="form-control" value="10" min="1" max="50">
+          <span style="font-size:12px;color:var(--text-muted);margin-top:4px;display:block;">Target dasar KPI bulanan yang diberikan kepada pendamping baru.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Integrasi SIHALAL BPJPH -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-header">
+        <h3>
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Konfigurasi Referensi SIHALAL BPJPH
+        </h3>
+      </div>
+      <div style="padding:24px;">
+        <p style="font-size:13.5px;color:var(--text-secondary);margin-bottom:16px;">
+          Sistem ini berfungsi sebagai instrumen monitoring internal LP3H untuk melengkapi SIHALAL. Data dapat diperbarui melalui fitur <strong>Import Data SIHALAL</strong> secara berkala.
+        </p>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <a href="{{ url_for('import_data') }}" class="btn btn-secondary">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            Buka Halaman Impor Data
+          </a>
+          <a href="https://ptsp.halal.go.id" target="_blank" rel="noopener" class="btn btn-outline" style="border:1px solid var(--border-color);color:var(--text-main);background:var(--bg-card);">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            Kunjungi SIHALAL BPJPH (ptsp.halal.go.id)
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-bottom:32px;">
+      <button type="reset" class="btn btn-secondary">Batal / Reset</button>
+      <button type="submit" class="btn btn-primary" style="padding:12px 28px;font-size:14px;">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        Simpan Pengaturan
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const toggle = document.getElementById('portalToggle');
+if (toggle) {
+  toggle.addEventListener('change', function() {
+    const slider = this.nextElementSibling;
+    const dot = slider.firstElementChild;
+    if (this.checked) {
+      slider.style.backgroundColor = 'var(--primary-emerald)';
+      dot.style.left = '26px';
+    } else {
+      slider.style.backgroundColor = '#cbd5e1';
+      dot.style.left = '3px';
+    }
+  });
+}
+</script>
+{% endblock %}

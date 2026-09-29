@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}Penugasan Pendamping – LP3H{% endblock %}
+{% block page_title %}Penugasan Pendamping{% endblock %}
+{% block breadcrumb %}LP3H &rsaquo; Penugasan{% endblock %}
+
+{% block content %}
+<div class="grid-2 fade-in-up">
+  <!-- Form Assign -->
+  <div class="card">
+    <div class="card-header"><h3>🔄 Assign / Reassign Pendamping</h3></div>
+    <div class="card-body">
+      <form method="POST" action="{{ url_for('assign_pendamping') }}">
+        <div class="form-group">
+          <label class="form-label">Pelaku Usaha</label>
+          <select name="pelaku_id" class="form-control" required id="pelakuSelect" onchange="showCurrentPend()">
+            <option value="">-- Pilih Pelaku Usaha --</option>
+            {% for pu in PELAKU_USAHA %}
+            <option value="{{ pu.id }}" data-pend="{{ pu.pendamping_id }}">{{ pu.nama_usaha }} ({{ pu.nib }})</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div id="currentPendInfo" style="display:none;padding:12px;background:var(--info-bg);border-radius:8px;margin-bottom:16px;font-size:13px;color:var(--info);">
+          <strong>Pendamping saat ini:</strong> <span id="currentPendName"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pendamping Baru</label>
+          <select name="pendamping_id" class="form-control" required>
+            <option value="">-- Pilih Pendamping --</option>
+            {% for p in PENDAMPING %}
+            {% if p.status == 'Aktif' %}
+            <option value="{{ p.id }}">{{ p.nama }} – {{ p.wilayah }} ({{ p.total_binaan }} binaan)</option>
+            {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-full" style="justify-content:center;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          Simpan Penugasan
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Ringkasan Beban Pendamping -->
+  <div class="card">
+    <div class="card-header"><h3>⚖️ Beban per Pendamping</h3></div>
+    <div class="card-body p-0">
+      {% for p in PENDAMPING[:10] %}
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 22px;border-bottom:1px solid var(--border);">
+        <div class="avatar av-{{ loop.index0 % 10 }}">{{ p.avatar }}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ p.nama }}</div>
+          <div style="font-size:11.5px;color:var(--text-muted);">{{ p.wilayah }}</div>
+          <div class="progress-bar-wrap" style="margin-top:4px;height:5px;">
+            {% set pct = [((p.total_binaan / (p.target_bulanan * 12)) * 100)|round, 100]|min|int %}
+            <div class="progress-bar-fill {{ 'success' if pct < 80 else 'warning' if pct < 100 else 'danger' }}"
+              style="width:{{ pct }}%;"></div>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-weight:800;font-size:15px;">{{ p.total_binaan }}</div>
+          <div style="font-size:11px;color:var(--text-muted);">/ {{ p.target_bulanan * 12 }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Table semua penugasan -->
+<div class="card fade-in-up" style="margin-top:22px;">
+  <div class="card-header">
+    <h3>📋 Daftar Penugasan Saat Ini</h3>
+    <div class="search-box" style="max-width:280px;">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      <input type="text" id="searchTugasInput" placeholder="Cari..." oninput="filterTugas()">
+    </div>
+  </div>
+  <div class="table-container">
+    <table class="lp3h-table" id="tugasTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Pelaku Usaha</th>
+          <th>NIB</th>
+          <th>Pendamping Ditugaskan</th>
+          <th>Wilayah</th>
+          <th>Status</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set colors = {'Sertifikat Terbit':'success','Proses Pendampingan':'info','Verifikasi & Validasi':'primary','Menunggu Sidang Fatwa':'warning','Perbaikan':'warning','Ditolak':'danger','Belum Diajukan':'secondary'} %}
+        {% for pu in PELAKU_USAHA[:50] %}
+        {% set pend = get_pendamping_by_id(pu.pendamping_id) %}
+        <tr data-name="{{ pu.nama_usaha|lower }}">
+          <td style="color:var(--text-muted);font-size:12px;">{{ loop.index }}</td>
+          <td style="font-weight:600;">{{ pu.nama_usaha }}</td>
+          <td style="font-size:12.5px;color:var(--text-muted);">{{ pu.nib }}</td>
+          <td>
+            {% if pend %}
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="avatar avatar-sm av-{{ pend.id % 10 }}">{{ pend.avatar }}</div>
+              <span style="font-size:13px;">{{ pend.nama.split(',')[0] }}</span>
+            </div>
+            {% else %}-{% endif %}
+          </td>
+          <td style="font-size:12.5px;">{{ pend.wilayah if pend else '-' }}</td>
+          <td><span class="badge badge-{{ colors.get(pu.status,'secondary') }}">{{ pu.status }}</span></td>
+          <td>
+            <a href="{{ url_for('detail_pelaku_usaha', pid=pu.id) }}" class="btn btn-xs btn-outline">Detail</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div style="padding:12px 22px;font-size:12.5px;color:var(--text-muted);border-top:1px solid var(--border);">
+    Menampilkan 50 dari {{ PELAKU_USAHA|length }} total
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const pendamping = {
+  {% for p in PENDAMPING %}
+  "{{ p.id }}": "{{ p.nama }}",
+  {% endfor %}
+};
+
+function showCurrentPend() {
+  const sel = document.getElementById('pelakuSelect');
+  const opt = sel.options[sel.selectedIndex];
+  const pendId = opt.dataset.pend;
+  const info = document.getElementById('currentPendInfo');
+  if (pendId && pendamping[pendId]) {
+    document.getElementById('currentPendName').textContent = pendamping[pendId];
+    info.style.display = 'block';
+  } else {
+    info.style.display = 'none';
+  }
+}
+
+function filterTugas() {
+  const q = document.getElementById('searchTugasInput').value.toLowerCase();
+  document.querySelectorAll('#tugasTable tbody tr').forEach(row => {
+    row.style.display = !q || row.dataset.name.includes(q) || row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

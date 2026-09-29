@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Audit Log Aktivitas – LP3H{% endblock %}
+{% block page_title %}Audit Log Aktivitas{% endblock %}
+{% block breadcrumb %}LP3H &rsaquo; Audit Log{% endblock %}
+
+{% block content %}
+<!-- Filter & Info Bar -->
+<div class="filter-bar fade-in-up">
+  <div class="search-box">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    <input type="text" id="searchLog" placeholder="Cari log berdasarkan user, aksi, atau detail..." oninput="filterLogs()">
+  </div>
+  <select class="form-control" id="filterAksi" onchange="filterLogs()" style="max-width:200px;">
+    <option value="">Semua Aksi</option>
+    <option value="Login">Login</option>
+    <option value="Update Status">Update Status</option>
+    <option value="Assign Pendamping">Assign Pendamping</option>
+    <option value="Import Data">Import Data</option>
+    <option value="Ekspor Laporan">Ekspor Laporan</option>
+    <option value="Ubah Pengaturan">Ubah Pengaturan</option>
+  </select>
+  <button class="btn btn-secondary" onclick="exportLogsCSV()">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+    Ekspor Log (CSV)
+  </button>
+</div>
+
+<!-- Info Alert -->
+<div class="alert alert-info fade-in-up" style="margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+  <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+  <div>
+    <strong>Rekam Jejak Terpusat:</strong> Seluruh aktivitas penting (login, perubahan status pelaku usaha, penugasan pendamping, dan impor data) dicatat secara otomatis untuk transparansi dan kepatuhan regulasi BPJPH.
+  </div>
+</div>
+
+<!-- Table Card -->
+<div class="card fade-in-up">
+  <div class="card-header">
+    <h3>
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      Riwayat Aktivitas Sistem
+    </h3>
+    <span class="badge badge-primary" id="logCountBadge">{{ logs|length }} rekaman</span>
+  </div>
+  <div class="table-container">
+    <table class="lp3h-table" id="logTable">
+      <thead>
+        <tr>
+          <th style="width:50px;">#</th>
+          <th style="width:160px;">Waktu</th>
+          <th style="width:180px;">Pengguna</th>
+          <th style="width:160px;">Aksi</th>
+          <th>Detail Aktivitas</th>
+          <th style="width:130px;">Alamat IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in logs %}
+        {% set aksi_cls = 'primary' %}
+        {% if 'Update Status' in l.aksi %}{% set aksi_cls = 'success' %}
+        {% elif 'Assign' in l.aksi %}{% set aksi_cls = 'info' %}
+        {% elif 'Import' in l.aksi %}{% set aksi_cls = 'gold' %}
+        {% elif 'Ekspor' in l.aksi %}{% set aksi_cls = 'secondary' %}
+        {% elif 'Ubah' in l.aksi %}{% set aksi_cls = 'warning' %}
+        {% endif %}
+        <tr data-search="{{ l.user|lower }} {{ l.aksi|lower }} {{ l.detail|lower }} {{ l.ip }}" data-aksi="{{ l.aksi }}">
+          <td style="color:var(--text-muted);font-size:12px;">{{ l.id }}</td>
+          <td style="font-size:12.5px;color:var(--text-secondary);white-space:nowrap;">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:inline;vertical-align:-2px;margin-right:3px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            {{ l.waktu }}
+          </td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="avatar" style="width:28px;height:28px;font-size:11px;">{{ l.user[:2]|upper }}</div>
+              <span style="font-weight:600;font-size:13px;">{{ l.user }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-{{ aksi_cls }}">{{ l.aksi }}</span>
+          </td>
+          <td style="font-size:13px;line-height:1.4;">{{ l.detail }}</td>
+          <td style="font-size:12px;color:var(--text-muted);font-family:monospace;">{{ l.ip }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function filterLogs() {
+  const q = document.getElementById('searchLog').value.toLowerCase();
+  const aksi = document.getElementById('filterAksi').value;
+  const rows = document.querySelectorAll('#logTable tbody tr');
+  let visible = 0;
+
+  rows.forEach(r => {
+    const textMatch = !q || r.dataset.search.includes(q);
+    const aksiMatch = !aksi || r.dataset.aksi.includes(aksi);
+    if (textMatch && aksiMatch) {
+      r.style.display = '';
+      visible++;
+    } else {
+      r.style.display = 'none';
+    }
+  });
+
+  const countBadge = document.getElementById('logCountBadge');
+  if (countBadge) countBadge.textContent = visible + ' rekaman';
+}
+
+function exportLogsCSV() {
+  const rows = document.querySelectorAll('#logTable tr');
+  let csv = [];
+  rows.forEach(r => {
+    if (r.style.display !== 'none') {
+      const cols = r.querySelectorAll('th, td');
+      const rowData = Array.from(cols).map(c => `"${c.innerText.trim().replace(/"/g, '""')}"`);
+      csv.push(rowData.join(','));
+    }
+  });
+  const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `Audit_Log_LP3H_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+</script>
+{% endblock %}

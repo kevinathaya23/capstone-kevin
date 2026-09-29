@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Import Data SIHALAL – LP3H{% endblock %}
+{% block page_title %}Import Data SIHALAL{% endblock %}
+{% block breadcrumb %}LP3H &rsaquo; Import Data{% endblock %}
+
+{% block content %}
+<!-- Info Banner -->
+<div class="alert alert-info fade-in-up" style="margin-bottom:20px;">
+  📅 <strong>Terakhir diimpor:</strong> {{ terakhir_import }} &nbsp;|&nbsp;
+  Dashboard ini adalah pelengkap SIHALAL, bukan pengganti. Status resmi dan sertifikat halal tetap mengacu pada <strong>SIHALAL BPJPH</strong>.
+</div>
+
+<div class="grid-2 fade-in-up">
+  <!-- Upload Form -->
+  <div class="card">
+    <div class="card-header">
+      <h3>⬆ Upload File SIHALAL</h3>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="{{ url_for('import_data') }}" enctype="multipart/form-data">
+        <!-- Drop zone -->
+        <div id="dropZone" style="border:2px dashed var(--border);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:18px;"
+          onmouseover="this.style.borderColor='var(--primary)';this.style.background='var(--primary-subtle)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.background='transparent'"
+          onclick="document.getElementById('fileInput').click()">
+          <div style="font-size:40px;margin-bottom:12px;">📁</div>
+          <div style="font-weight:600;font-size:15px;color:var(--text-main);margin-bottom:6px;">Drag & drop file di sini</div>
+          <div style="font-size:13px;color:var(--text-muted);">atau klik untuk memilih file</div>
+          <div style="font-size:12px;color:var(--text-light);margin-top:8px;">Format: .xlsx, .xls, .csv (maks 10MB)</div>
+        </div>
+        <input type="file" id="fileInput" name="file" accept=".xlsx,.xls,.csv" style="display:none;"
+          onchange="document.getElementById('fileName').textContent=this.files[0]?.name||'Belum dipilih'">
+        <div style="font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:16px;">
+          File: <strong id="fileName">Belum dipilih</strong>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Pilih Mode Import</label>
+          <select name="mode" class="form-control">
+            <option value="preview">Preview Dulu (Direkomendasikan)</option>
+            <option value="langsung">Import Langsung</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pilih Pendamping (opsional)</label>
+          <select name="pendamping_id" class="form-control">
+            <option value="">-- Auto-assign / Manual nanti --</option>
+            {% for p in range(1,16) %}{% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-full" style="justify-content:center;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+          Preview & Import
+        </button>
+      </form>
+
+      <div class="dropdown-divider" style="margin:20px 0;"></div>
+
+      <div style="font-size:13.5px;font-weight:600;color:var(--text-muted);margin-bottom:10px;">📥 Template Import</div>
+      <a href="#" class="btn btn-outline w-full" style="justify-content:center;" onclick="alert('Download template Excel SIHALAL')">
+        ⬇ Download Template Excel
+      </a>
+    </div>
+  </div>
+
+  <!-- Panduan Import -->
+  <div class="card">
+    <div class="card-header"><h3>📖 Panduan Import</h3></div>
+    <div class="card-body">
+      <ol style="list-style:none;padding:0;display:flex;flex-direction:column;gap:14px;">
+        {% set steps = [
+          ('1', 'Download template Excel dari tombol di bawah.', '📥'),
+          ('2', 'Ekspor data dari SIHALAL BPJPH sesuai format template.', '🌐'),
+          ('3', 'Upload file di form ini (xlsx/csv).', '⬆'),
+          ('4', 'Preview data untuk memeriksa validasi dan duplikat.', '👁'),
+          ('5', 'Konfirmasi import jika data sudah benar.', '✅'),
+        ] %}
+        {% for num, desc, icon in steps %}
+        <li style="display:flex;align-items:flex-start;gap:12px;">
+          <div style="width:32px;height:32px;background:var(--primary-subtle);color:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">{{ num }}</div>
+          <div style="padding-top:4px;font-size:13.5px;color:var(--text-main);">{{ icon }} {{ desc }}</div>
+        </li>
+        {% endfor %}
+      </ol>
+
+      <div style="margin-top:20px;padding:14px;background:var(--warning-bg);border-radius:8px;border-left:4px solid var(--warning);">
+        <div style="font-weight:700;font-size:13px;color:var(--warning);margin-bottom:4px;">⚠ Catatan Penting</div>
+        <ul style="font-size:12.5px;color:var(--warning);list-style:disc;margin-left:16px;line-height:1.8;">
+          <li>NIB yang sama tidak akan diduplikasi</li>
+          <li>Data yang ada tidak akan ditimpa otomatis</li>
+          <li>Selalu preview sebelum import final</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Preview hasil import -->
+{% if preview_data %}
+<div class="card fade-in-up" style="margin-top:22px;">
+  <div class="card-header">
+    <h3>👁 Preview Hasil Import</h3>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span class="badge badge-success">{{ preview_data|selectattr('status','equalto','OK')|list|length }} OK</span>
+      <span class="badge badge-danger">{{ errors|length }} Bermasalah</span>
+    </div>
+  </div>
+  <div class="table-container">
+    <table class="lp3h-table">
+      <thead>
+        <tr><th>#</th><th>Nama Usaha</th><th>Pemilik</th><th>NIB</th><th>Status Validasi</th></tr>
+      </thead>
+      <tbody>
+        {% for row in preview_data %}
+        <tr style="{{ 'background:var(--danger-bg)' if 'Error' in row.status or 'Duplikat' in row.status else '' }}">
+          <td>{{ row.no }}</td>
+          <td style="font-weight:600;">{{ row.nama_usaha }}</td>
+          <td>{{ row.pemilik }}</td>
+          <td style="font-size:12.5px;">{{ row.nib }}</td>
+          <td>
+            {% if row.status == 'OK' %}
+            <span class="badge badge-success">✅ {{ row.status }}</span>
+            {% elif 'Duplikat' in row.status %}
+            <span class="badge badge-warning">⚠ {{ row.status }}</span>
+            {% else %}
+            <span class="badge badge-danger">❌ {{ row.status }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer" style="border-top:1px solid var(--border);padding:16px 22px;display:flex;gap:10px;justify-content:flex-end;">
+    <button class="btn btn-outline" onclick="window.location.reload()">✕ Batal</button>
+    <button class="btn btn-primary" onclick="alert('Import dikonfirmasi! Data valid akan disimpan.')">
+      ✅ Konfirmasi Import ({{ preview_data|selectattr('status','equalto','OK')|list|length }} data)
+    </button>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

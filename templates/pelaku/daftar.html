@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Daftar Pelaku Usaha – LP3H{% endblock %}
+{% block page_title %}Daftar Pelaku Usaha{% endblock %}
+{% block breadcrumb %}LP3H &rsaquo; Daftar Pelaku Usaha{% endblock %}
+
+{% block content %}
+<!-- Filter Bar -->
+<form method="GET" action="{{ url_for('daftar_pelaku_usaha') }}" class="filter-bar fade-in-up">
+  <div class="search-box">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    <input type="text" name="q" value="{{ q }}" placeholder="Cari nama usaha, pemilik, NIB...">
+  </div>
+  <select class="form-control" name="status" style="width:auto;">
+    <option value="">Semua Status</option>
+    {% for s in STATUS_LIST %}
+    <option value="{{ s }}" {{ 'selected' if s == status_filter }}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  <select class="form-control" name="pendamping_id" style="width:auto;">
+    <option value="">Semua Pendamping</option>
+    {% for p in PENDAMPING %}
+    <option value="{{ p.id }}" {{ 'selected' if p.id|string == request.args.get('pendamping_id','') }}>{{ p.nama }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn btn-primary">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+    Filter
+  </button>
+  {% if q or status_filter %}
+  <a href="{{ url_for('daftar_pelaku_usaha') }}" class="btn btn-outline">✕ Reset</a>
+  {% endif %}
+  {% if current_user.role == 'admin' %}
+  <button type="button" class="btn btn-gold" onclick="alert('Tambah Pelaku Usaha: hubungkan ke backend.')">+ Tambah</button>
+  {% endif %}
+</form>
+
+<!-- Stats Row -->
+<div class="stats-grid fade-in-up" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+  <div class="stat-card info">
+    <div class="stat-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/></svg></div>
+    <div class="stat-body"><div class="label">Total Data</div><div class="value">{{ total }}</div></div>
+  </div>
+  <div class="stat-card success">
+    <div class="stat-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+    <div class="stat-body"><div class="label">Sertifikat Terbit</div><div class="value">{{ pelaku_list|selectattr('status','equalto','Sertifikat Terbit')|list|length }}</div><div class="sub">Halaman ini</div></div>
+  </div>
+  <div class="stat-card warning">
+    <div class="stat-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+    <div class="stat-body"><div class="label">Sedang Proses</div><div class="value">{{ pelaku_list|selectattr('status','in',['Proses Pendampingan','Verifikasi & Validasi','Menunggu Sidang Fatwa'])|list|length }}</div><div class="sub">Halaman ini</div></div>
+  </div>
+  <div class="stat-card danger">
+    <div class="stat-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+    <div class="stat-body"><div class="label">Ditolak</div><div class="value">{{ pelaku_list|selectattr('status','equalto','Ditolak')|list|length }}</div><div class="sub">Halaman ini</div></div>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="card fade-in-up">
+  <div class="card-header">
+    <h3>
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>
+      Data Pelaku Usaha
+    </h3>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-sm btn-outline" onclick="alert('Ekspor Excel: hubungkan ke backend.')">
+        ⬇ Ekspor Excel
+      </button>
+      <button class="btn btn-sm btn-outline" onclick="alert('Ekspor PDF: hubungkan ke backend.')">
+        ⬇ Ekspor PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="lp3h-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nama Usaha</th>
+          <th>Pemilik / NIB</th>
+          <th>Jenis Usaha</th>
+          <th>Pendamping</th>
+          <th>Status</th>
+          <th>Tgl Mulai</th>
+          <th>Update Terakhir</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set colors = {'Sertifikat Terbit':'success','Proses Pendampingan':'info','Verifikasi & Validasi':'primary','Menunggu Sidang Fatwa':'warning','Perbaikan':'warning','Ditolak':'danger','Belum Diajukan':'secondary'} %}
+        {% for pu in pelaku_list %}
+        {% set pend = get_pendamping_by_id(pu.pendamping_id) %}
+        <tr>
+          <td style="color:var(--text-muted);font-size:12px;">{{ (page-1)*per_page + loop.index }}</td>
+          <td>
+            <div style="font-weight:700;font-size:13.5px;">{{ pu.nama_usaha }}</div>
+            <div style="font-size:11.5px;color:var(--text-muted);">{{ pu.jenis_produk }}</div>
+          </td>
+          <td>
+            <div style="font-weight:500;">{{ pu.nama_pemilik }}</div>
+            <div style="font-size:11.5px;color:var(--text-muted);">{{ pu.nib }}</div>
+          </td>
+          <td style="font-size:12.5px;">{{ pu.jenis_usaha }}</td>
+          <td>
+            {% if pend %}
+            <div style="font-size:13px;font-weight:500;">{{ pend.nama.split(',')[0] }}</div>
+            <div style="font-size:11.5px;color:var(--text-muted);">📍 {{ pend.wilayah }}</div>
+            {% else %}
+            <span style="color:var(--text-muted);">-</span>
+            {% endif %}
+          </td>
+          <td>
+            <span class="badge badge-{{ colors.get(pu.status, 'secondary') }}">{{ pu.status }}</span>
+          </td>
+          <td style="font-size:12.5px;white-space:nowrap;">{{ pu.tanggal_mulai|formatdate }}</td>
+          <td style="font-size:12.5px;white-space:nowrap;">{{ pu.terakhir_update|formatdate }}</td>
+          <td>
+            <a href="{{ url_for('detail_pelaku_usaha', pid=pu.id) }}" class="btn btn-xs btn-primary">Detail</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="9">
+            <div class="empty-state">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <h4>Tidak ada data ditemukan</h4>
+              <p>Coba ubah filter pencarian Anda.</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if pages > 1 %}
+  <div class="pagination">
+    <span style="font-size:13px;color:var(--text-muted);margin-right:8px;">Halaman {{ page }} dari {{ pages }}</span>
+    {% if page > 1 %}
+    <a href="{{ url_for('daftar_pelaku_usaha', page=page-1, q=q, status=status_filter) }}" class="page-item">‹</a>
+    {% endif %}
+    {% for p_num in range(1, pages+1) %}
+      {% if p_num == page or p_num == 1 or p_num == pages or (p_num >= page-1 and p_num <= page+1) %}
+      <a href="{{ url_for('daftar_pelaku_usaha', page=p_num, q=q, status=status_filter) }}"
+        class="page-item {{ 'active' if p_num == page }}">{{ p_num }}</a>
+      {% elif p_num == page-2 or p_num == page+2 %}
+      <span class="page-item disabled">…</span>
+      {% endif %}
+    {% endfor %}
+    {% if page < pages %}
+    <a href="{{ url_for('daftar_pelaku_usaha', page=page+1, q=q, status=status_filter) }}" class="page-item">›</a>
+    {% endif %}
+  </div>
+  {% else %}
+  <div style="padding:12px 22px;font-size:13px;color:var(--text-muted);border-top:1px solid var(--border);">
+    Menampilkan {{ pelaku_list|length }} dari {{ total }} data
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

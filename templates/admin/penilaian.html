@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Penilaian Tugas Praktik</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100 min-h-screen">
+
+  <!-- Headerlog with added margin bottom for spacing -->
+  <div class="mb-12">
+    {% include 'headerlog.html' %}
+  </div>
+
+  <div class="max-w-7xl mx-auto space-y-8 px-6 sm:px-12">
+            <div class="mb-8">
+                <h1 class="text-gray-900 text-4xl md:text-5xl font-bold mb-4">Penilaian Tugas Praktik</h1>
+                <p class="text-gray-600">
+                    Verifikasi dan penilaian tugas praktik yang diajukan oleh pendamping halal
+                </p>
+            </div>
+    <!-- Pesan flash dengan animasi fade in -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="space-y-3">
+          {% for category, message in messages %}
+          <div
+            class="p-4 rounded shadow-md text-white
+            {% if category == 'success' %} bg-green-600
+            {% elif category == 'error' %} bg-red-600
+            {% else %} bg-gray-600
+            {% endif %}
+            animate-fade-in"
+            style="animation-duration: 600ms;">
+            {{ message }}
+          </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Daftar tugas -->
+    {% for tugas in tugas_list %}
+    <div class="bg-white rounded-3xl shadow-lg border border-gray-200 p-8 hover:shadow-xl transition-shadow duration-300">
+      <div class="flex justify-between items-start">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ tugas[1] }}</h2> <!-- Nama Pendamping -->
+
+        <!-- Label status -->
+        {% set status_label = tugas[10].lower() %}
+        {% if status_label == 'menunggu' or status_label == 'pending' %}
+          <span class="px-4 py-1 rounded-full text-sm uppercase font-semibold bg-yellow-100 text-yellow-800 select-none whitespace-nowrap drop-shadow">
+            Menunggu
+          </span>
+        {% elif status_label == 'disetujui' or status_label == 'approved' %}
+          <span class="px-4 py-1 rounded-full text-sm uppercase font-semibold bg-green-100 text-green-800 select-none whitespace-nowrap drop-shadow">
+            Disetujui
+          </span>
+        {% elif status_label == 'ditolak' or status_label == 'rejected' %}
+          <span class="px-4 py-1 rounded-full text-sm uppercase font-semibold bg-red-100 text-red-800 select-none whitespace-nowrap drop-shadow">
+            Ditolak
+          </span>
+        {% else %}
+          <span class="px-4 py-1 rounded-full text-sm uppercase font-semibold bg-gray-100 text-gray-700 select-none whitespace-nowrap drop-shadow">
+            {{ tugas[10] }}
+          </span>
+        {% endif %}
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-gray-700 leading-relaxed">
+        <div>
+          <p><strong>Email Pendamping:</strong> {{ tugas[2] }}</p>
+          <p><strong>Nomor HP:</strong> {{ tugas[3] }}</p>
+          <p><strong>Nama Perusahaan:</strong> {{ tugas[4] }}</p>
+          <p><strong>Bidang Usaha:</strong> {{ tugas[5] }}</p>
+        </div>
+        <div>
+          <p><strong>Jenis Tugas:</strong> {{ tugas[6] }}</p>
+          <p><strong>Deskripsi Tugas:</strong> {{ tugas[7] }}</p>
+          <p><strong>Kendala:</strong> {{ tugas[8] or '-' }}</p>
+          <p><strong>Catatan Tambahan:</strong> {{ tugas[9] or '-' }}</p>
+          <p><strong>Tanggal Submit:</strong> {{ tugas[11] }}</p>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <p class="font-semibold text-gray-800 mb-3">Dokumen Terlampir:</p>
+        <div class="flex flex-wrap gap-3">
+          {% for idx in [12, 13, 14, 15, 16] %}
+            {% if tugas[idx] is string and tugas[idx]|length > 0 %}
+              <a href="{{ url_for('static', filename='uploads/' ~ tugas[idx]) }}" target="_blank"
+                class="inline-block px-5 py-2 bg-blue-50 border border-blue-300 text-blue-700 rounded-full text-sm font-medium hover:bg-blue-100 transition">
+                {{ tugas[idx] }}
+                <svg xmlns="http://www.w3.org/2000/svg" class="inline w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Form update status -->
+      <form action="{{ url_for('update_tugas_status') }}" method="POST" class="flex flex-wrap gap-4 items-center">
+        <input type="hidden" name="tugas_id" value="{{ tugas[0] }}">
+        <input type="text" name="alasan" placeholder="Alasan penolakan (isi jika tolak)" 
+               class="flex-grow min-w-[280px] border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500" />
+        <button type="submit" name="status" value="approved"
+                class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition shadow-md">
+          Setujui
+        </button>
+        <button type="submit" name="status" value="rejected"
+                class="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition shadow-md">
+          Tolak
+        </button>
+      </form>
+    </div>
+    {% else %}
+    <p class="text-center text-gray-500 mt-10">Tidak ada tugas menunggu verifikasi.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Tailwind animation for fade-in -->
+  <style>
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .animate-fade-in {
+      animation-name: fade-in;
+      animation-timing-function: ease-in-out;
+      animation-fill-mode: forwards;
+    }
+  </style>
+
+</body>
+
+</html>
